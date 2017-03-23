@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xal="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0">
+    <Document>
+        <name>kmlDocument</name>
+        <Placemark>
+            <name>point 0</name>
+            <open>1</open>
+            <Point>
+                <coordinates>18.434683333333332,43.555483333333335</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>point 1</name>
+            <open>1</open>
+            <Point>
+                <coordinates>20.3498,43.555483333333335</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>point 2</name>
+            <open>1</open>
+            <Point>
+                <coordinates>20.3498,41.85113333333334</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>point 3</name>
+            <open>1</open>
+            <Point>
+                <coordinates>18.434683333333332,41.85113333333334</coordinates>
+            </Point>
+        </Placemark>
+    </Document>
+</kml>

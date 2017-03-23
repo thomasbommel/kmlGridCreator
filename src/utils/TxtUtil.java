@@ -22,8 +22,8 @@ public class TxtUtil {
 		try {
 			String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
 
-			// Path path = Paths.get(getFilePath(desktopPath));
-			Path path = Paths.get(desktopPath + "/test_input.txt");
+			Path path = Paths.get(selectFilePath(desktopPath));
+			// Path path = Paths.get(desktopPath + "/test_input.txt");
 
 			List<String> lines = Files.readAllLines(path, Charset.forName("UTF-8"));
 

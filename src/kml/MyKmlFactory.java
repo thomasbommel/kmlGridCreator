@@ -9,6 +9,7 @@ import com.peertopark.java.geocalc.Point;
 
 import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
+import map.GridField;
 
 public class MyKmlFactory {
 
@@ -28,7 +29,8 @@ public class MyKmlFactory {
 		}
 	}
 
-	public void createAndAddGroundOverlayToKml(List<Point> points) {
+	@Deprecated
+	public void createAndAddGroundOverlayToKml(List<Point> points, int gridSizeInM) {
 		for (Point pp : points) {
 			document.createAndAddGroundOverlay()
 					.withName("test")
@@ -36,10 +38,22 @@ public class MyKmlFactory {
 					.withColor("88aaffff")
 					.createAndSetLatLonBox()
 					.withNorth(pp.getLatitude())
-					.withSouth(EarthCalc.pointRadialDistance(pp, 0, 900).getLatitude())
+					.withSouth(EarthCalc.pointRadialDistance(pp, 0, gridSizeInM * 0.96).getLatitude())
 					.withWest(pp.getLongitude())
-					.withEast(EarthCalc.pointRadialDistance(pp, 90, 900).getLongitude());
+					.withEast(EarthCalc.pointRadialDistance(pp, 90, gridSizeInM * 0.96).getLongitude());
 		}
+	}
+
+	public void createAndAddColoredGroundOverlayToKml(GridField gridField, int gridSizeInM) {
+		document.createAndAddGroundOverlay()
+				.withName("test")
+				.withDescription("testdescription")
+				.withColor(ColorScheme.getColor(gridField.getCount()))
+				.createAndSetLatLonBox()
+				.withNorth(gridField.getNwPoint().getLatitude())
+				.withSouth(EarthCalc.pointRadialDistance(gridField.getNwPoint(), 0, gridSizeInM * 0.96).getLatitude())
+				.withWest(gridField.getNwPoint().getLongitude())
+				.withEast(EarthCalc.pointRadialDistance(gridField.getNwPoint(), 90, gridSizeInM * 0.96).getLongitude());
 	}
 
 	public void saveKmlFile(String name) {

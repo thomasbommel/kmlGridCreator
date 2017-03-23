@@ -13,7 +13,7 @@ import exceptions.ListEmptyException;
 
 public class GeoUtil {
 
-	public static final double calculateDistanceInKM(Point from, Point to) {
+	public static final double calculateDistanceInMeter(Point from, Point to) {
 		return EarthCalc.getHarvesineDistance(from, to);
 	}
 

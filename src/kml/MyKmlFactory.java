@@ -4,18 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
 
-import application.MainApplication;
-import application.MyBoundingArea;
 import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.LineStyle;
 import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
-import map.GridField;
+import map.MyBoundingArea;
+import utils.Logger;
+import utils.Logger.LogLevel;
 
 public class MyKmlFactory {
+	private static final Logger log = new Logger(LogLevel.DEBUG);
 
 	private Kml kml;
 	private Document document;
@@ -24,9 +24,6 @@ public class MyKmlFactory {
 		this.kml = new Kml();
 		this.document = this.kml.createAndSetDocument().withName("kmlDocument");
 
-		// String low = "FF0711FA";
-		// String normal = "FF0AFCF5";
-		// String high = "FFA1FA42";
 		final LineStyle linestyle = document.createAndAddStyle().withId("linestyle").createAndSetLineStyle().withColor("FFC0C0C0").withWidth(1.0);
 		final PolyStyle poly1 = document.createAndAddStyle().withId("polystyle").createAndSetPolyStyle().withFill(true).withColor("B2FFFFFF");
 		final PolyStyle poly2 = document.createAndAddStyle().withId("polystyle").createAndSetPolyStyle().withFill(true).withColor("B2E6E6FF");
@@ -44,45 +41,15 @@ public class MyKmlFactory {
 	public void addPointsToKml(List<Point> points) {
 		for (int i = 0; i < points.size(); i++) {
 			Point kmlPoint = points.get(i);
-			// document.createAndAddPlacemark().withName("point " +
-			// i).withOpen(Boolean.FALSE).createAndSetPoint().addToCoordinates(kmlPoint.getLongitude(),
-			// kmlPoint.getLatitude());
 			document.createAndAddPlacemark().withOpen(Boolean.FALSE).createAndSetPoint().addToCoordinates(kmlPoint.getLongitude(),
 					kmlPoint.getLatitude());
 		}
 	}
 
-	@Deprecated
-	public void createAndAddGroundOverlayToKml(List<Point> points, int gridSizeInM) {
-		for (Point pp : points) {
-			document.createAndAddGroundOverlay()
-					.withName("test")
-					.withDescription("testdescription")
-					.withColor("88aaffff")
-					.createAndSetLatLonBox()
-					.withNorth(pp.getLatitude())
-					.withSouth(EarthCalc.pointRadialDistance(pp, 0, gridSizeInM * 0.96).getLatitude())
-					.withWest(pp.getLongitude())
-					.withEast(EarthCalc.pointRadialDistance(pp, 90, gridSizeInM * 0.96).getLongitude());
-		}
-	}
-
-	public void createAndAddColoredGroundOverlayToKml(GridField gridField, int gridSizeInM) {
-		document.createAndAddGroundOverlay()
-				.withName("test")
-				.withDescription("testdescription")
-				.withColor(ColorScheme.getColor(gridField.getCount()))
-				.createAndSetLatLonBox()
-				.withNorth(gridField.getNwPoint().getLatitude())
-				.withSouth(EarthCalc.pointRadialDistance(gridField.getNwPoint(), 0, gridSizeInM * 0.96).getLatitude())
-				.withWest(gridField.getNwPoint().getLongitude())
-				.withEast(EarthCalc.pointRadialDistance(gridField.getNwPoint(), 90, gridSizeInM * 0.96).getLongitude());
-	}
-
 	public void saveKmlFile(String name) {
 		try {
 			kml.marshal(new File(name + ".kml"));
-			MainApplication.log.debug("kml " + name + " saved");
+			log.debug("kml " + name + " saved");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -1,14 +1,16 @@
 package application;
 
-import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.peertopark.java.geocalc.Coordinate;
+import com.peertopark.java.geocalc.DegreeCoordinate;
+import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
 
 import kml.MyKmlFactory;
-import map.Grid;
-import map.GridField;
+import map.MyBoundingArea;
 import utils.GeoUtil;
 import utils.Logger;
 import utils.Logger.LogLevel;
@@ -16,48 +18,88 @@ import utils.TxtUtil;
 
 public class MainApplication {
 
-	public static final Logger log = new Logger(LogLevel.DEBUG);
+	public static final int GRID_SIZE_IN_M = 1000;
 
-	public static void main(String[] args) throws IOException {
-		List<Point> allPoints = TxtUtil.getTestPoints();
+	private static final Logger log = new Logger(LogLevel.DEBUG);
 
-		Point[] tests = GeoUtil.getCornersNwNeSeSw(allPoints);
+	public static void main(String[] args) {
+		log.debug(new Date().toString());
 
-		System.out.println(Arrays.asList(tests));
+		List<Point> points = TxtUtil.getTestPoints();
 
-		System.out.println(GeoUtil.calculateDistanceInMeter(tests[0], tests[3]));// nw-sw
-		System.out.println(GeoUtil.calculateDistanceInMeter(tests[1], tests[2]));// ne-se
+		List<MyBoundingArea> boundingAreas = new ArrayList<>();
 
-		System.out.println(GeoUtil.calculateDistanceInMeter(tests[0], tests[1]));// nw-ne
-		System.out.println(GeoUtil.calculateDistanceInMeter(tests[3], tests[2]));// sw-se
+		// just for testing
+		// Point m1 = new Point(new DegreeCoordinate(41.842898), new
+		// DegreeCoordinate(18.394896));
+		// Point m2 = new Point(new DegreeCoordinate(41.833901), new
+		// DegreeCoordinate(18.395261));
+		// Point m3 = new Point(new DegreeCoordinate(41.834173), new
+		// DegreeCoordinate(18.4072921));
+		// Point m4 = new Point(new DegreeCoordinate(41.843171), new
+		// DegreeCoordinate(18.406928));
 
-		final int GRIDSIZE = 1000;
-		Grid grid = new Grid(tests[0], tests[2], GRIDSIZE);
+		final Coordinate lat = new DegreeCoordinate(43.554);
+		final Coordinate lng = new DegreeCoordinate(18.4346);
 
-		MyKmlFactory kml = new MyKmlFactory();
-		kml.addPointsToKml(Arrays.asList(tests));
+		Point[] corners = GeoUtil.getCornersNwNeSeSw(points);
 
-		// allPoints.forEach(p -> grid.addPoint(p));
+		Point startPointNW = corners[0];
 
-		List<GridField> grids = grid.getGridFields();
+		final MyKmlFactory kml = new MyKmlFactory();
 
-		// grids.forEach(g ->
-		// System.out.println(g.getPointsInThisGridField().size()));
+		startPointNW = EarthCalc.pointRadialDistance(EarthCalc.pointRadialDistance(startPointNW, 0, GRID_SIZE_IN_M * 2), 270, GRID_SIZE_IN_M * 2);
 
-		grids.forEach(gf -> kml.createAndAddColoredGroundOverlayToKml(gf, GRIDSIZE));
+		Point nwPointOfField = startPointNW;
 
-		// Arrays.asList(tests).stream().forEach(System.out::println); // prints
-		// out corners
+		Point sw = EarthCalc.pointRadialDistance(EarthCalc.pointRadialDistance(startPointNW, 90, GRID_SIZE_IN_M), 180, GRID_SIZE_IN_M);
 
-		kml.saveKmlFile("testkml");
+		int xSize = Math.max((int) Math.ceil(EarthCalc.getHarvesineDistance(corners[0], corners[1]) / GRID_SIZE_IN_M),
+				(int) Math.ceil(EarthCalc.getHarvesineDistance(corners[2], corners[3]) / GRID_SIZE_IN_M)) + 2;
+		int ySize = Math.max((int) Math.ceil(EarthCalc.getHarvesineDistance(corners[0], corners[3]) / GRID_SIZE_IN_M),
+				(int) Math.ceil(EarthCalc.getHarvesineDistance(corners[1], corners[2]) / GRID_SIZE_IN_M)) + 4;
+		log.debug("xSize: " + xSize);
+		log.debug("ySize: " + ySize);
 
-		MyKmlFactory kml2 = new MyKmlFactory();
-		kml2 = new MyKmlFactory();
-		// kml2.addPointsToKml(grid.unusedPoints);
-		kml2.saveKmlFile("unusedPoints");
-		System.out.println(grid.unusedPoints.size());
-		System.exit(0);
+		for (int yIndex = 0; yIndex < ySize; yIndex++) {// height
+			for (int xIndex = 0; xIndex < xSize; xIndex++) {// width
+				nwPointOfField = (EarthCalc.pointRadialDistance(nwPointOfField, 90, GRID_SIZE_IN_M));
+				sw = EarthCalc.pointRadialDistance(EarthCalc.pointRadialDistance(nwPointOfField, 270, GRID_SIZE_IN_M), 180, GRID_SIZE_IN_M);
 
+				MyBoundingArea ba = new MyBoundingArea(nwPointOfField, sw, yIndex + " | " + xIndex);
+				boundingAreas.add(ba);
+			}
+			nwPointOfField = (EarthCalc.pointRadialDistance(startPointNW, 180, GRID_SIZE_IN_M * (yIndex + 1)));
+		}
+
+		final List<Point> notfound = new ArrayList<>();
+
+		for (Point p : points) {
+			boolean found = false;
+			for (MyBoundingArea ba : boundingAreas) {
+				if (ba.addPoint(p)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				notfound.add(p);
+			}
+		}
+
+		for (MyBoundingArea ba : boundingAreas) {
+			kml.addBoundingArea(ba);
+			if (ba.getPointCount() > 0) {
+				// log.debug("" + ba.getPointCount());
+			}
+		}
+
+		kml.addPointsToKml(notfound);
+		// kml.addPointsToKml(points);
+
+		log.debug(points.size() + " points added");
+		log.debug(notfound.size() + " points couldn't be added");
+		kml.saveKmlFile("test");
+		log.debug(new Date().toString());
 	}
-
 }

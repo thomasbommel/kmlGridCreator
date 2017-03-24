@@ -7,9 +7,9 @@ public class ColorScheme {
 	private static final String high = "FFA1FA42";
 
 	public static String getColor(int count) {
-		if (count < 10) {
+		if (count < 30) {
 			return low;
-		} else if (count < 20) {
+		} else if (count < 50) {
 			return normal;
 		} else {
 			return high;

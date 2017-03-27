@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.peertopark.java.geocalc.Coordinate;
 import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.EarthCalc;
@@ -95,11 +97,13 @@ public class MainApplication {
 		}
 
 		kml.addPointsToKml(notfound);
-		// kml.addPointsToKml(points);
+		// kml.addPointsToKml(points); // if you want to add all points
 
 		log.debug(points.size() + " points added");
 		log.debug(notfound.size() + " points couldn't be added");
-		kml.saveKmlFile("test");
+		kml.saveKmlFile("KmlGrid_" + System.currentTimeMillis());
 		log.debug(new Date().toString());
+
+		JOptionPane.showMessageDialog(null, "KML creation successful.");
 	}
 }

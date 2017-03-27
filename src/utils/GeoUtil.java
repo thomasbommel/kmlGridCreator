@@ -10,63 +10,65 @@ import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
 
 import exceptions.ListEmptyException;
+import utils.Logger.LogLevel;
 
 public class GeoUtil {
+
+	private static final Logger log = new Logger(LogLevel.DEBUG);
 
 	public static final double calculateDistanceInMeter(Point from, Point to) {
 		return EarthCalc.getHarvesineDistance(from, to);
 	}
 
 	/**
-	 * @param allPoints
+	 * @param points
 	 * @return the array of the NW, NE, SE, SW corner points of the given list
 	 */
-	public static Point[] getCornersNwNeSeSw(List<Point> allPoints) {
-		Optional<Point> west = allPoints.stream().min(new Comparator<Point>() {
+	public static Point[] getCornersNwNeSeSw(List<Point> points) {
+		Optional<Point> west = points.stream().min(new Comparator<Point>() {
 			@Override
 			public int compare(Point a, Point b) {
 				return Double.compare(a.getLongitude(), b.getLongitude());
 			}
 		});
 
-		Optional<Point> east = allPoints.stream().max(new Comparator<Point>() {
+		Optional<Point> east = points.stream().max(new Comparator<Point>() {
 			@Override
 			public int compare(Point a, Point b) {
 				return Double.compare(a.getLongitude(), b.getLongitude());
 			}
 		});
 
-		Optional<Point> north = allPoints.stream().max(new Comparator<Point>() {
+		Optional<Point> north = points.stream().max(new Comparator<Point>() {
 			@Override
 			public int compare(Point a, Point b) {
 				return Double.compare(a.getLatitude(), b.getLatitude());
 			}
 		});
 
-		Optional<Point> south = allPoints.stream().min(new Comparator<Point>() {
+		Optional<Point> south = points.stream().min(new Comparator<Point>() {
 			@Override
 			public int compare(Point a, Point b) {
 				return Double.compare(a.getLatitude(), b.getLatitude());
 			}
 		});
-
+		log.debug("---------- CORNERS --------");
 		if (north.isPresent())
-			System.out.println("N:  " + (double) Math.round(north.get().getLatitude() * 1000) / 1000 + " 衹 ");
+			log.debug("N:  " + (double) Math.round(north.get().getLatitude() * 1000) / 1000 + " 衹 ");
 
 		if (west.isPresent())
-			System.out.println("E:  " + (double) Math.round(east.get().getLongitude() * 1000) / 1000 + " 記");
+			log.debug("E:  " + (double) Math.round(east.get().getLongitude() * 1000) / 1000 + " 記");
 
 		if (south.isPresent())
-			System.out.println("S:  " + (double) Math.round(south.get().getLatitude() * 1000) / 1000 + " 衹 ");
+			log.debug("S:  " + (double) Math.round(south.get().getLatitude() * 1000) / 1000 + " 衹 ");
 
 		if (west.isPresent())
-			System.out.println("W:  " + (double) Math.round(west.get().getLongitude() * 1000) / 1000 + " 記");
-
+			log.debug("W:  " + (double) Math.round(west.get().getLongitude() * 1000) / 1000 + " 記");
+		log.debug("---------------------------");
 		Point nw = new Point(new DegreeCoordinate(north.get().getLatitude()), new DegreeCoordinate(west.get().getLongitude()));
 		Point se = new Point(new DegreeCoordinate(south.get().getLatitude()), new DegreeCoordinate(east.get().getLongitude()));
 		Point ne = new Point(new DegreeCoordinate(north.get().getLatitude()), new DegreeCoordinate(east.get().getLongitude()));
 		Point sw = new Point(new DegreeCoordinate(south.get().getLatitude()), new DegreeCoordinate(west.get().getLongitude()));
-		System.out.println("--- points calculated ---");
 		return new Point[] { nw, ne, se, sw };
 	}
 

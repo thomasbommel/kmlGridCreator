@@ -1,4 +1,4 @@
-package kml;
+package old.kml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,12 +10,12 @@ import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.LineStyle;
 import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
-import map.MyBoundingArea;
-import utils.Logger;
-import utils.Logger.LogLevel;
+import old.map.MyBoundingArea;
+import old.utils.Logger;
+import old.utils.Logger.LogLevel;
 
 public class MyKmlFactory {
-	private static final Logger log = new Logger(LogLevel.DEBUG);
+	private static final old.utils.Logger log = new Logger(LogLevel.DEBUG);
 
 	private Kml kml;
 	private Document document;

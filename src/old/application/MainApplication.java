@@ -1,4 +1,4 @@
-package application;
+package old.application;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,17 +6,15 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.peertopark.java.geocalc.Coordinate;
-import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
 
-import kml.MyKmlFactory;
-import map.MyBoundingArea;
-import utils.GeoUtil;
-import utils.Logger;
-import utils.Logger.LogLevel;
-import utils.TxtUtil;
+import old.kml.MyKmlFactory;
+import old.map.MyBoundingArea;
+import old.utils.GeoUtil;
+import old.utils.Logger;
+import old.utils.Logger.LogLevel;
+import old.utils.TxtUtil;
 
 public class MainApplication {
 
@@ -25,7 +23,8 @@ public class MainApplication {
 	private static final Logger log = new Logger(LogLevel.DEBUG);
 
 	public static void main(String[] args) {
-		log.debug(new Date().toString());
+		final Date start = new Date();
+		log.debug(start.toString());
 
 		List<Point> points = TxtUtil.getTestPoints();
 
@@ -41,8 +40,8 @@ public class MainApplication {
 		// Point m4 = new Point(new DegreeCoordinate(41.843171), new
 		// DegreeCoordinate(18.406928));
 
-		final Coordinate lat = new DegreeCoordinate(43.554);
-		final Coordinate lng = new DegreeCoordinate(18.4346);
+		// final Coordinate lat = new DegreeCoordinate(43.554);
+		// final Coordinate lng = new DegreeCoordinate(18.4346);
 
 		Point[] corners = GeoUtil.getCornersNwNeSeSw(points);
 
@@ -81,6 +80,7 @@ public class MainApplication {
 			for (MyBoundingArea ba : boundingAreas) {
 				if (ba.addPoint(p)) {
 					found = true;
+					System.out.println("point found: " + p);
 					break;
 				}
 			}
@@ -103,7 +103,7 @@ public class MainApplication {
 		log.debug(notfound.size() + " points couldn't be added");
 		kml.saveKmlFile("KmlGrid_" + System.currentTimeMillis());
 		log.debug(new Date().toString());
-
+		log.debug("time needed: " + Math.round((new Date().getTime() - start.getTime()) / 1000) + " seconds");
 		JOptionPane.showMessageDialog(null, "KML creation successful.");
 	}
 }

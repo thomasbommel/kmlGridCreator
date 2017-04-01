@@ -1,9 +1,9 @@
 package kmlGridCreator.view;
 
+import kmlGridCreator.model.MapDataModel;
+
 public class MainApplication {
 	private String applicationName;
-
-	private static View view;
 
 	private MainApplication(String name) {
 		this.applicationName = name;
@@ -15,9 +15,7 @@ public class MainApplication {
 
 	public static void main(String[] args) {
 		MainApplication app = new MainApplication("KML GENERATOR");
-		view = new GuiView(app);
-
-	
+		GuiView view = new GuiView(app, new MapDataModel());
 	}
 
 }

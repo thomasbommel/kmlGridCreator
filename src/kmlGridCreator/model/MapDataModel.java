@@ -11,4 +11,24 @@ public class MapDataModel {
 		// TODO
 	}
 
+	public MyMap getMap() {
+		return map;
+	}
+
+	public File getFileToReadFrom() {
+		return fileToReadFrom;
+	}
+
+	public void setFileToReadFrom(File fileToReadFrom) {
+		this.fileToReadFrom = fileToReadFrom;
+	}
+
+	public File getFileToWriteTo() {
+		return fileToWriteTo;
+	}
+
+	public void setFileToWriteTo(File fileToWriteTo) {
+		this.fileToWriteTo = fileToWriteTo;
+	}
+
 }

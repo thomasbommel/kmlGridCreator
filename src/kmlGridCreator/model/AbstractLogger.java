@@ -16,6 +16,18 @@ public abstract class AbstractLogger implements printToConsole {
 		}
 	}
 
+	public final void error(String msg) {
+		log(msg, LogLevel.ERROR);
+	}
+
+	public final void warn(String msg) {
+		log(msg, LogLevel.WARNING);
+	}
+
+	public final void info(String msg) {
+		log(msg, LogLevel.INFO);
+	}
+
 	public final void debug(String msg) {
 		log(msg, LogLevel.DEBUG);
 	}

@@ -6,16 +6,20 @@ import kmlGridCreator.model.MapDataModel;
 
 public abstract class View {
 
-	private MapDataModel model;
+	protected MapDataModel model;
+
+	public View(MapDataModel model) {
+		this.model = model;
+	}
 
 	protected abstract File selectInputFile();
 
 	protected abstract File selectOutputFile();
 
-	protected final void startCreation() {
-		this.model.startCreation();
-	};
-
 	public abstract void printToConsole(String msg);
+
+	public MapDataModel getModel() {
+		return model;
+	}
 
 }

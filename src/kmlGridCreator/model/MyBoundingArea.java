@@ -1,4 +1,4 @@
-package map;
+package kmlGridCreator.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,10 @@ public class MyBoundingArea extends BoundingArea {
 
 	public int getPointCount() {
 		return this.points.size();
+	}
+
+	public List<Point> getPoints() {
+		return this.points;
 	}
 
 }

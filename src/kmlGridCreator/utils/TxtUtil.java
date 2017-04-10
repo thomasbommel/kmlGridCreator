@@ -1,6 +1,7 @@
-package utils;
+package kmlGridCreator.utils;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +19,32 @@ import com.peertopark.java.geocalc.Point;
 
 public class TxtUtil {
 
+	public static final List<Point> getPointsFromTxt(File file) {
+		try {
+			Path path = Paths.get(file.getAbsolutePath());
+			List<String> lines = Files.readAllLines(path, Charset.forName("UTF-8"));
+			// System.out.println(lines);
+			lines = lines.stream().map(line -> line.substring(18, line.length())).collect(Collectors.toList());
+			List<Point> allPoints = new ArrayList<>();
+			lines.forEach(line -> {
+				String northDegree = line.substring(0, 3);
+				String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
+				// System.out.println(northDegree+" "+northMinutes);
+				String eastDegree = line.substring(10, 13);
+				String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
+				// System.out.println(eastDegree+" "+eastMinutes);
+				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
+				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
+				allPoints.add(new Point(north, east));
+			});
+			return allPoints;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Deprecated
 	public static final List<Point> getTestPoints() {
 		try {
 			String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
@@ -54,50 +81,7 @@ public class TxtUtil {
 		return null;
 	}
 
-	public static final List<Point> getEvery4thTestPoints() {
-		try {
-			String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
-
-			Path path = Paths.get(selectFilePath(desktopPath));
-			// Path path = Paths.get(desktopPath + "/test_input.txt");
-
-			List<String> lines = Files.readAllLines(path, Charset.forName("UTF-8"));
-
-			// System.out.println(lines);
-
-			lines = lines.stream().map(line -> line.substring(18, line.length())).collect(Collectors.toList());
-
-			List<Point> allPoints = new ArrayList<>();
-			lines.forEach(line -> {
-				String northDegree = line.substring(0, 3);
-				String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
-				// System.out.println(northDegree+" "+northMinutes);
-
-				String eastDegree = line.substring(10, 13);
-				String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
-				// System.out.println(eastDegree+" "+eastMinutes);
-
-				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
-				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
-
-				allPoints.add(new Point(north, east));
-
-			});
-
-			ArrayList<Point> justfordebuggingdeletethis = new ArrayList<>();
-			for (int i = 0; i < allPoints.size(); i++) {
-				if (i % 4 == 0) {
-					justfordebuggingdeletethis.add(allPoints.get(i));
-				}
-			}
-
-			return justfordebuggingdeletethis;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
+	@Deprecated
 	public static final String selectFilePath(String desktopPath) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setPreferredSize(new Dimension(1000, 600));

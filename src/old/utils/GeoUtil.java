@@ -1,4 +1,4 @@
-package utils;
+package old.utils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -9,8 +9,8 @@ import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
 
-import exceptions.ListEmptyException;
-import utils.Logger.LogLevel;
+import old.exceptions.ListEmptyException;
+import old.utils.Logger.LogLevel;
 
 public class GeoUtil {
 

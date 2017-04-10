@@ -12,8 +12,13 @@ public class GuiLogger extends AbstractLogger {
 	}
 
 	@Override
-	public void printToConsole(String msg) {
-		view.getConsole().setText(view.getConsole().getText() + msg + "\n");
+	public synchronized void printToConsole(String msg) {
+		view.getConsole().append(msg + "\n");
+	}
+
+	@Override
+	public synchronized void setConsoleText(String text) {
+		view.getConsole().setText(text);
 	}
 
 }

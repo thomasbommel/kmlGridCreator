@@ -33,4 +33,8 @@ public class MyBoundingArea extends BoundingArea {
 		return this.points.size();
 	}
 
+	public List<Point> getPoints() {
+		return this.points;
+	}
+
 }

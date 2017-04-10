@@ -6,12 +6,12 @@ import java.util.List;
 import com.peertopark.java.geocalc.BoundingArea;
 import com.peertopark.java.geocalc.Point;
 
-public class MyBoundingArea extends BoundingArea {
+public class MyOldBoundingArea extends BoundingArea {
 
 	private List<Point> points;
 	private String id;
 
-	public MyBoundingArea(Point northEast, Point southWest, String id) {
+	public MyOldBoundingArea(Point northEast, Point southWest, String id) {
 		super(northEast, southWest);
 		this.points = new ArrayList<>();
 		this.id = id;

@@ -10,9 +10,14 @@ public abstract class AbstractLogger implements printToConsole {
 
 	private final void log(String message, LogLevel loglevel) {
 		if (loglevel.shouldBeLogged(this)) {
-			// System.out.println("[" + loglevel.name() + "] " + message);
 			message = "[" + loglevel.name() + "] " + message;
 			printToConsole(message);
+		}
+	}
+
+	public final void logInOneLine(String message, LogLevel loglevel) {
+		if (loglevel.shouldBeLogged(this)) {
+			setConsoleText(message);
 		}
 	}
 

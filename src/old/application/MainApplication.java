@@ -10,7 +10,7 @@ import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
 
 import old.kml.MyKmlFactory;
-import old.map.MyBoundingArea;
+import old.map.MyOldBoundingArea;
 import old.utils.GeoUtil;
 import old.utils.Logger;
 import old.utils.Logger.LogLevel;
@@ -18,7 +18,7 @@ import old.utils.TxtUtil;
 
 public class MainApplication {
 
-	public static final int GRID_SIZE_IN_M = 1000;
+	public static final int GRID_SIZE_IN_M = 5000;
 
 	private static final Logger log = new Logger(LogLevel.DEBUG);
 
@@ -28,7 +28,7 @@ public class MainApplication {
 
 		List<Point> points = TxtUtil.getTestPoints();
 
-		List<MyBoundingArea> boundingAreas = new ArrayList<>();
+		List<MyOldBoundingArea> boundingAreas = new ArrayList<>();
 
 		// just for testing
 		// Point m1 = new Point(new DegreeCoordinate(41.842898), new
@@ -67,7 +67,7 @@ public class MainApplication {
 				nwPointOfField = (EarthCalc.pointRadialDistance(nwPointOfField, 90, GRID_SIZE_IN_M));
 				sw = EarthCalc.pointRadialDistance(EarthCalc.pointRadialDistance(nwPointOfField, 270, GRID_SIZE_IN_M), 180, GRID_SIZE_IN_M);
 
-				MyBoundingArea ba = new MyBoundingArea(nwPointOfField, sw, yIndex + " | " + xIndex);
+				MyOldBoundingArea ba = new MyOldBoundingArea(nwPointOfField, sw, yIndex + " | " + xIndex);
 				boundingAreas.add(ba);
 			}
 			nwPointOfField = (EarthCalc.pointRadialDistance(startPointNW, 180, GRID_SIZE_IN_M * (yIndex + 1)));
@@ -77,10 +77,10 @@ public class MainApplication {
 
 		for (Point p : points) {
 			boolean found = false;
-			for (MyBoundingArea ba : boundingAreas) {
+			for (MyOldBoundingArea ba : boundingAreas) {
 				if (ba.addPoint(p)) {
 					found = true;
-					System.out.println("point found: " + p);
+					// System.out.println("point found: " + p);
 					break;
 				}
 			}
@@ -89,15 +89,15 @@ public class MainApplication {
 			}
 		}
 
-		for (MyBoundingArea ba : boundingAreas) {
-			kml.addBoundingArea(ba);
+		for (MyOldBoundingArea ba : boundingAreas) {
+			// kml.addBoundingArea(ba);
 			if (ba.getPointCount() > 0) {
 				// log.debug("" + ba.getPointCount());
 			}
 		}
 
 		kml.addPointsToKml(notfound);
-		// kml.addPointsToKml(points); // if you want to add all points
+		kml.addPointsToKml(points); // if you want to add all points
 
 		log.debug(points.size() + " points added");
 		log.debug(notfound.size() + " points couldn't be added");

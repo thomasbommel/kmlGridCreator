@@ -1,23 +1,18 @@
-package old.kml;
+package kmlGridCreator.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import com.peertopark.java.geocalc.DMSCoordinate;
-import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.Point;
 
 import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.LineStyle;
 import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
-import old.map.MyOldBoundingArea;
-import old.utils.Logger;
-import old.utils.Logger.LogLevel;
+import kmlGridCreator.model.MyBoundingArea;
 
 public class MyKmlFactory {
-	private static final old.utils.Logger log = new Logger(LogLevel.DEBUG);
 
 	private Kml kml;
 	private Document document;
@@ -43,32 +38,21 @@ public class MyKmlFactory {
 	public void addPointsToKml(List<Point> points) {
 		for (int i = 0; i < points.size(); i++) {
 			Point kmlPoint = points.get(i);
-
-			DegreeCoordinate lat = new DegreeCoordinate(kmlPoint.getLatitude());
-			DegreeCoordinate lng = new DegreeCoordinate(kmlPoint.getLongitude());
-
-			DMSCoordinate latt = lat.getDMSCoordinate();
-			DMSCoordinate lngg = lng.getDMSCoordinate();
-
-			document.createAndAddPlacemark().withOpen(Boolean.FALSE)
-					.withName(latt.getWholeDegrees() + "," + (latt.getMinutes() + latt.getSeconds() / 60) + "   " + lngg.getWholeDegrees() + ","
-							+ (lngg.getMinutes() + lngg.getSeconds() / 60))
-					.createAndSetPoint()
-					.addToCoordinates(kmlPoint.getLongitude(),
-							kmlPoint.getLatitude());
+			document.createAndAddPlacemark().withOpen(Boolean.FALSE).createAndSetPoint().addToCoordinates(kmlPoint.getLongitude(),
+					kmlPoint.getLatitude());
 		}
 	}
 
-	public void saveKmlFile(String name) {
+	public void saveKmlFile(File outputFile) {
 		try {
-			kml.marshal(new File(name + ".kml"));
-			log.debug("kml " + name + " saved");
+			kml.marshal(outputFile);
+			System.out.println("kml " + outputFile.getAbsolutePath() + " saved");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void addBoundingArea(MyOldBoundingArea ba) {
+	public void addBoundingArea(MyBoundingArea ba) {
 
 		Point nw = ba.getNorthWest();
 		Point ne = ba.getNorthEast();

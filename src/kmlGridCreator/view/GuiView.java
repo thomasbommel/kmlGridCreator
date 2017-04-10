@@ -6,6 +6,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -32,9 +34,11 @@ public class GuiView extends View {
 	private JFrame frame;
 	private JPanel contentPane;
 	private GuiLogger log;
+	private Lock lock = new ReentrantLock();
 
 	public GuiView(MainApplication app, MapDataModel model) {
 		super(model);
+
 		log = new GuiLogger(LogLevel.DEBUG, this);
 
 		// try {
@@ -48,7 +52,7 @@ public class GuiView extends View {
 
 		this.initialiseFrame();
 
-		this.frame.setSize(640, 480);
+		this.frame.setSize(840, 640);
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
 		this.frame.setResizable(false);
@@ -63,13 +67,19 @@ public class GuiView extends View {
 				"Mit diesem Button kann eine Datei, aus der dann gelesen wird, ausgewählt werden.",
 				"es kann derzeit kein Datei zum Einlesen ausgewählt werden");
 		this.selectInputFileBtn.addActionListener(a -> {
-			File selectedFile = selectInputFile();
-			if (selectedFile != null) {
-				this.getModel().setFileToReadFrom(selectedFile);
-				this.selectInputFileBtn.setEnabledText("Eing. ändern");
-				this.selectInputFileBtn.setToolTipText("Mit diesem Button kann die Auswahl der Eingabedatei geändert werden.");
-				this.log.info(selectedFile.getName() + " wurde als Eingabedatei ausgewählt.");
-				this.selectOutputFileBtn.setEnabled(true);
+			if (lock.tryLock()) {
+				try {
+					File selectedFile = selectInputFile();
+					if (selectedFile != null) {
+						this.getModel().setFileToReadFrom(selectedFile);
+						this.selectInputFileBtn.setEnabledText("Eing. ändern");
+						this.selectInputFileBtn.setToolTipText("Mit diesem Button kann die Auswahl der Eingabedatei geändert werden.");
+						this.log.info(selectedFile.getName() + " wurde als Eingabedatei ausgewählt.");
+						this.selectOutputFileBtn.setEnabled(true);
+					}
+				} finally {
+					lock.unlock();
+				}
 			}
 		});
 		this.contentPane.add(selectInputFileBtn);
@@ -77,13 +87,23 @@ public class GuiView extends View {
 		this.selectOutputFileBtn = new MyJButton(false, "Ausg. auswählen", "Ausg. auswählen",
 				"Mit diesem Button kann eine Datei, in die dann geschrieben wird, ausgewählt werden", "derzeit nicht möglich");
 		this.selectOutputFileBtn.addActionListener(a -> {
-			File selectedFile = selectOutputFile();
-			if (selectedFile != null) {
-				this.getModel().setFileToReadFrom(selectedFile);
-				this.selectInputFileBtn.setEnabledText("Ausg. ändern");
-				this.selectInputFileBtn.setToolTipText("Mit diesem Button kann die Auswahl der Ausgabedatei geändert werden.");
-				this.log.info(selectedFile.getName() + " wurde als Ausgabedatei ausgewählt.");
-				this.startCreationBtn.setEnabled(true);
+			if (lock.tryLock()) {
+				try {
+					File selectedFile = selectOutputFile();
+					if (selectedFile != null) {
+						this.getModel().setFileToWriteTo(selectedFile);
+						this.selectOutputFileBtn.setEnabledText("Ausg. ändern");
+						this.selectOutputFileBtn.setToolTipText("Mit diesem Button kann die Auswahl der Ausgabedatei geändert werden.");
+						this.log.info(selectedFile.getName() + " wurde als Ausgabedatei ausgewählt.");
+						this.getModel().setFileToWriteTo(selectedFile);
+
+						if (this.getModel().getFileToReadFrom() != null && this.getModel().getFileToWriteTo() != null) {
+							this.startCreationBtn.setEnabled(true);
+						}
+					}
+				} finally {
+					lock.unlock();
+				}
 			}
 		});
 
@@ -91,10 +111,26 @@ public class GuiView extends View {
 
 		this.startCreationBtn = new MyJButton(false, "starte Generierung", "starte Generierung",
 				"startet die Berechnung der Punkte und speichert dann die .kml Datei", "derzeit nicht möglich");
-		this.startCreationBtn.setEnabled(false);
+		this.startCreationBtn.addActionListener(a -> {
+			MapDataModel model = this.getModel();
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					if (lock.tryLock()) {
+						try {
+							model.startCreation();
+						} finally {
+							lock.unlock();
+						}
+					}
+				}
+			};
+			thread.start();
+		});
+
 		this.contentPane.add(startCreationBtn);
 
-		this.console = new JTextArea(20, 50);
+		this.console = new JTextArea(28, 70);
 		this.console.setFont(this.console.getFont().deriveFont(14f));
 		final DefaultCaret caret = (DefaultCaret) console.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -117,22 +153,11 @@ public class GuiView extends View {
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setAcceptAllFileFilterUsed(false);
 
-		String path = null;
-		while (path == null) {
-			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				// System.out.println("getCurrentDirectory(): " +
-				// chooser.getCurrentDirectory());
-				// System.out.println("getSelectedFile() : " +
-				// chooser.getSelectedFile());
-				if (chooser.getSelectedFile().getName().toLowerCase().endsWith(".txt")) {
-					path = chooser.getSelectedFile().getAbsolutePath();
-
-					if (!Files.exists(Paths.get(chooser.getSelectedFile().getAbsolutePath()))) {
-						JOptionPane.showMessageDialog(frame, "Datei existiert nicht");
-					} else {
-						return chooser.getSelectedFile();
-					}
-				}
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (!chooser.getSelectedFile().getName().toLowerCase().endsWith(".txt") || !Files.exists(Paths.get(chooser.getSelectedFile().getAbsolutePath()))) {
+				JOptionPane.showMessageDialog(frame, "Datei existiert nicht oder ist ein ungültiges Format");
+			} else {
+				return chooser.getSelectedFile();
 			}
 		}
 		return null;
@@ -172,8 +197,18 @@ public class GuiView extends View {
 	}
 
 	@Override
-	public void printToConsole(String msg) {
-		log.debug(msg);
+	public void printToViewConsole(String msg) {
+		log.info(msg);
+	}
+
+	@Override
+	public String getCurrentText() {
+		return this.getConsole().getText();
+	}
+
+	@Override
+	public void setViewConsoleText(String msg) {
+		this.console.setText(msg + "\n");
 	}
 
 	// =====================================================================

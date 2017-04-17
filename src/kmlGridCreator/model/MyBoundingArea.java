@@ -1,6 +1,7 @@
 package kmlGridCreator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.peertopark.java.geocalc.BoundingArea;
@@ -8,12 +9,12 @@ import com.peertopark.java.geocalc.Point;
 
 public class MyBoundingArea extends BoundingArea {
 
-	private List<Point> points;
-	private String id;
+	private final List<Point> points;
+	private final String id;
 
 	public MyBoundingArea(Point northEast, Point southWest, String id) {
 		super(northEast, southWest);
-		this.points = new ArrayList<>();
+		this.points = Collections.synchronizedList(new ArrayList<>());
 		this.id = id;
 	}
 

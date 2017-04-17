@@ -77,16 +77,25 @@ public class MyMap {
 				view.printToViewConsole("bisher " + formatForConsole(i + 10000) + " von " + formatForConsole(pointsSize) + " Punkten hinzugefügt.");
 			}
 
-			for (final MyBoundingArea ba : boundingAreas) {
-				if (ba.addPoint(points.get(i))) {
-					break;
+			final Point p = points.get(i);
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					for (final MyBoundingArea ba : boundingAreas) {
+						if (ba.addPoint(p)) {
+							return;
+						}
+					}
 				}
-			}
+			};
+			r.run();
+
 		}
 
 		final int addedPointsCount = boundingAreas.stream().mapToInt(x -> x.getPointCount()).sum();
 		view.printToViewConsole(
-				formatForConsole(addedPointsCount) + " Punkte wurden " + formatForConsole(boundingAreas.size()) + " Feldern hinzugefügt, "
+				formatForConsole(addedPointsCount) + " Punkte wurden " +
+						formatForConsole(boundingAreas.size()) + " Feldern hinzugefügt, "
 						+ formatForConsole(points.size() - addedPointsCount)
 						+ " Punkte konnten keinem Feld zugeordnet werden.");
 	}

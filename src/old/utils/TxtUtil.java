@@ -69,18 +69,20 @@ public class TxtUtil {
 
 			List<Point> allPoints = new ArrayList<>();
 			lines.forEach(line -> {
-				String northDegree = line.substring(0, 3);
-				String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
-				// System.out.println(northDegree+" "+northMinutes);
+				if (isValidLine(line)) {
+					String northDegree = line.substring(0, 3);
+					String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
+					// System.out.println(northDegree+" "+northMinutes);
 
-				String eastDegree = line.substring(10, 13);
-				String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
-				// System.out.println(eastDegree+" "+eastMinutes);
+					String eastDegree = line.substring(10, 13);
+					String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
+					// System.out.println(eastDegree+" "+eastMinutes);
 
-				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
-				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
+					GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
+					GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
 
-				allPoints.add(new Point(north, east));
+					allPoints.add(new Point(north, east));
+				}
 
 			});
 
@@ -96,6 +98,10 @@ public class TxtUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private static boolean isValidLine(String line) {
+		return !line.contains("Fehler");
 	}
 
 	public static final String selectFilePath(String desktopPath) {

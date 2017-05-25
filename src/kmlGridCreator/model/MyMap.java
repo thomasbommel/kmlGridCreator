@@ -69,16 +69,18 @@ public class MyMap {
 	}
 
 	public void addPointsToTheAreas() {
+		long starttime = System.currentTimeMillis();
 
 		view.printToViewConsole("--- " + formatForConsole(points.size()) + " Punkte werden hinzugefügt. ---");
 		final int pointsSize = points.size();
+
 		for (int i = 0; i < pointsSize; i++) {
 			if (i % 10000 == 0) {
 				view.printToViewConsole("bisher " + formatForConsole(i + 10000) + " von " + formatForConsole(pointsSize) + " Punkten hinzugefügt.");
 			}
 
 			final Point p = points.get(i);
-			Runnable r = new Runnable() {
+			final Runnable r = new Runnable() {
 				@Override
 				public void run() {
 					for (final MyBoundingArea ba : boundingAreas) {
@@ -98,6 +100,7 @@ public class MyMap {
 						formatForConsole(boundingAreas.size()) + " Feldern hinzugefügt, "
 						+ formatForConsole(points.size() - addedPointsCount)
 						+ " Punkte konnten keinem Feld zugeordnet werden.");
+		System.out.println(System.currentTimeMillis() - starttime);
 	}
 
 	// ==================================================

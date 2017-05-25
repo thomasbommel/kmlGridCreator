@@ -1,6 +1,6 @@
 package kmlGridCreator.model;
 
-public abstract class AbstractLogger implements printToConsole {
+public abstract class AbstractLogger implements ConsolePrintable {
 
 	private LogLevel activeLogLevel;
 

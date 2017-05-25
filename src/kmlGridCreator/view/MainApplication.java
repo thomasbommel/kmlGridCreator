@@ -33,7 +33,6 @@ public class MainApplication {
 	}
 
 	public static void main(String[] args) {
-
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy.MM.dd");
 		try {
 			Date d = dateformat.parse("2017.05.20");

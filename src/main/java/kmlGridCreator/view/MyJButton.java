@@ -1,7 +1,11 @@
-package kmlGridCreator.view;
+package main.java.kmlGridCreator.view;
 
 import javax.swing.JButton;
 
+/**
+ * this class has the same functionality as a normal JButton except the fact
+ * that it handles the button-texts itself
+ */
 public class MyJButton extends JButton {
 
 	private String enabledText, disabledText, enabledToolTipText, disabledToolTipText;

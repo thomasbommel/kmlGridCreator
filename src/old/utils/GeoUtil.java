@@ -12,6 +12,7 @@ import com.peertopark.java.geocalc.Point;
 import old.exceptions.ListEmptyException;
 import old.utils.Logger.LogLevel;
 
+@Deprecated
 public class GeoUtil {
 
 	private static final Logger log = new Logger(LogLevel.DEBUG);

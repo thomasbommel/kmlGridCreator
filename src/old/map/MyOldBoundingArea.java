@@ -6,6 +6,7 @@ import java.util.List;
 import com.peertopark.java.geocalc.BoundingArea;
 import com.peertopark.java.geocalc.Point;
 
+@Deprecated
 public class MyOldBoundingArea extends BoundingArea {
 
 	private List<Point> points;

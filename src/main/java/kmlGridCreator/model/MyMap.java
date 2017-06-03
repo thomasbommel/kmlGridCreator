@@ -1,6 +1,4 @@
-package kmlGridCreator.model;
-
-import static kmlGridCreator.view.MainApplication.formatForConsole;
+package main.java.kmlGridCreator.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,19 +6,19 @@ import java.util.List;
 import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
 
-import kmlGridCreator.utils.GeoUtil;
-import kmlGridCreator.view.View;
+import main.java.kmlGridCreator.utils.GeoUtil;
+import main.java.kmlGridCreator.view.View;
 
 public class MyMap {
 
-	private Point nwPoint, nePoint, swPoint, sePoint;
-	private Point[] corners;
+	private MyPoint nwPoint, nePoint, swPoint, sePoint;
+	private MyPoint[] corners;
 	private List<MyBoundingArea> boundingAreas;
 	private final int GRID_SIZE_IN_M;
 	private View view;
-	private List<Point> points;
+	private List<MyPoint> points;
 
-	public MyMap(List<Point> points, int gridSize, View view) {
+	public MyMap(List<MyPoint> points, int gridSize, View view) {
 		super();
 		this.points = points;
 		this.GRID_SIZE_IN_M = gridSize;
@@ -34,7 +32,7 @@ public class MyMap {
 		this.boundingAreas = generateBoundingAreas(points);
 	}
 
-	private List<MyBoundingArea> generateBoundingAreas(List<Point> points) {
+	private List<MyBoundingArea> generateBoundingAreas(List<MyPoint> points) {
 		List<MyBoundingArea> areas = new ArrayList<>();
 		Point startPointNW = nwPoint;
 
@@ -71,12 +69,12 @@ public class MyMap {
 	public void addPointsToTheAreas() {
 		long starttime = System.currentTimeMillis();
 
-		view.printToViewConsole("--- " + formatForConsole(points.size()) + " Punkte werden hinzugefügt. ---");
+		view.printToViewConsole("--- " + view.formatForConsole(points.size()) + " Punkte werden hinzugefügt. ---");
 		final int pointsSize = points.size();
 
 		for (int i = 0; i < pointsSize; i++) {
 			if (i % 10000 == 0) {
-				view.printToViewConsole("bisher " + formatForConsole(i + 10000) + " von " + formatForConsole(pointsSize) + " Punkten hinzugefügt.");
+				view.printToViewConsole("bisher " + view.formatForConsole(i + 10000) + " von " + view.formatForConsole(pointsSize) + " Punkten hinzugefügt.");
 			}
 
 			final Point p = points.get(i);
@@ -91,14 +89,13 @@ public class MyMap {
 				}
 			};
 			r.run();
-
 		}
 
 		final int addedPointsCount = boundingAreas.stream().mapToInt(x -> x.getPointCount()).sum();
 		view.printToViewConsole(
-				formatForConsole(addedPointsCount) + " Punkte wurden " +
-						formatForConsole(boundingAreas.size()) + " Feldern hinzugefügt, "
-						+ formatForConsole(points.size() - addedPointsCount)
+				view.formatForConsole(addedPointsCount) + " Punkte wurden " +
+						view.formatForConsole(boundingAreas.size()) + " Feldern hinzugefügt, "
+						+ view.formatForConsole(points.size() - addedPointsCount)
 						+ " Punkte konnten keinem Feld zugeordnet werden.");
 		System.out.println(System.currentTimeMillis() - starttime);
 	}

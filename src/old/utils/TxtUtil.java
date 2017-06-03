@@ -16,6 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.peertopark.java.geocalc.GPSCoordinate;
 import com.peertopark.java.geocalc.Point;
 
+@Deprecated
 public class TxtUtil {
 
 	public static final List<Point> getTestPoints() {

@@ -1,5 +1,6 @@
 package old.utils;
 
+@Deprecated
 public class Logger {
 
 	private LogLevel activeLogLevel;

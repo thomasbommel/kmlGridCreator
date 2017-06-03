@@ -1,6 +1,6 @@
-package kmlGridCreator.view;
+package main.java.kmlGridCreator.view;
 
-import kmlGridCreator.model.AbstractLogger;
+import main.java.kmlGridCreator.model.AbstractLogger;
 
 public class GuiLogger extends AbstractLogger {
 
@@ -13,12 +13,12 @@ public class GuiLogger extends AbstractLogger {
 
 	@Override
 	public synchronized void printToConsole(String msg) {
-		view.getConsole().append(msg + "\n");
+		view.getConsoleTextArea().append(msg + "\n");
 	}
 
 	@Override
 	public synchronized void setConsoleText(String text) {
-		view.getConsole().setText(text);
+		view.getConsoleTextArea().setText(text);
 	}
 
 }

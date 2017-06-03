@@ -1,10 +1,11 @@
-package kmlGridCreator.model;
+package main.java.kmlGridCreator.model;
 
 import java.io.File;
+import java.io.IOException;
 
-import kmlGridCreator.utils.MyKmlFactory;
-import kmlGridCreator.utils.TxtUtil;
-import kmlGridCreator.view.View;
+import main.java.kmlGridCreator.utils.MyKmlFactory;
+import main.java.kmlGridCreator.utils.TxtUtil;
+import main.java.kmlGridCreator.view.View;
 
 public class MapDataModel {
 
@@ -12,7 +13,7 @@ public class MapDataModel {
 	private File fileToReadFrom, fileToWriteTo;
 	private View view;
 
-	public void startCreation() {
+	public void startCreation() throws IOException {
 		view.printToViewConsole("Die Generierung des kml Files wurde gestartet.");
 
 		map = new MyMap(TxtUtil.getPointsFromTxt(fileToReadFrom), 1000, view);
@@ -21,7 +22,7 @@ public class MapDataModel {
 		view.printToViewConsole(
 				"--- Die Zuordnung ist beendet ---");
 
-		MyKmlFactory kml = new MyKmlFactory();
+		MyKmlFactory kml = new MyKmlFactory("generatedKmlDocument");
 
 		view.printToViewConsole(" Datei " + fileToWriteTo.getName() + " wird erstellt.");
 		for (MyBoundingArea area : map.getBoundingAreas()) {

@@ -1,4 +1,4 @@
-package kmlGridCreator.view;
+package main.java.kmlGridCreator.view;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,13 +16,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 
-import kmlGridCreator.model.AbstractLogger.LogLevel;
-import kmlGridCreator.model.MapDataModel;
-import kmlGridCreator.model.MyBoundingArea;
+import main.java.kmlGridCreator.model.AbstractLogger.LogLevel;
+import main.java.kmlGridCreator.model.MapDataModel;
+import main.java.kmlGridCreator.model.MyBoundingArea;
+import main.java.kmlGridCreator.model.Unused;
 
 public class GuiView extends View {
 
@@ -41,22 +44,26 @@ public class GuiView extends View {
 
 		log = new GuiLogger(LogLevel.DEBUG, this);
 
-		// try {
-		// UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-		// } catch (ClassNotFoundException | InstantiationException |
-		// IllegalAccessException | UnsupportedLookAndFeelException e) {
-		// e.printStackTrace();
-		// }
 		this.frame = new JFrame(app.getTitle());
 		this.app = app;
 
 		this.initialiseFrame();
+		// setLookAndFeel();
 
 		this.frame.setSize(840, 640);
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
 		this.frame.setResizable(false);
 		this.frame.setVisible(true);
+	}
+
+	@Unused
+	private void setLookAndFeel() {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initialiseFrame() {
@@ -119,6 +126,8 @@ public class GuiView extends View {
 					if (lock.tryLock()) {
 						try {
 							model.startCreation();
+						} catch (Exception e) {
+							e.printStackTrace();
 						} finally {
 							lock.unlock();
 						}
@@ -203,7 +212,7 @@ public class GuiView extends View {
 
 	@Override
 	public String getCurrentText() {
-		return this.getConsole().getText();
+		return this.getConsoleTextArea().getText();
 	}
 
 	@Override
@@ -236,19 +245,19 @@ public class GuiView extends View {
 		this.log = log;
 	}
 
-	public JTextArea getConsole() {
+	public JTextArea getConsoleTextArea() {
 		return console;
 	}
 
-	public JButton getSelectInputFile() {
+	public JButton getSelectInputFileBtn() {
 		return selectInputFileBtn;
 	}
 
-	public JButton getSelectOutputFile() {
+	public JButton getSelectOutputFileBtn() {
 		return selectOutputFileBtn;
 	}
 
-	public JButton getStartCreation() {
+	public JButton getStartCreationBtn() {
 		return startCreationBtn;
 	}
 

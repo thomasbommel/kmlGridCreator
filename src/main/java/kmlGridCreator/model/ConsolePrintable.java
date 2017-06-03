@@ -1,4 +1,4 @@
-package kmlGridCreator.model;
+package main.java.kmlGridCreator.model;
 
 public interface ConsolePrintable {
 	public void printToConsole(String text);

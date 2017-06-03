@@ -1,12 +1,14 @@
-package kmlGridCreator.utils;
+package main.java.kmlGridCreator.utils;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,31 +19,40 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.peertopark.java.geocalc.GPSCoordinate;
 import com.peertopark.java.geocalc.Point;
 
+import main.java.kmlGridCreator.model.MyPoint;
+
 public class TxtUtil {
 
-	public static final List<Point> getPointsFromTxt(File file) {
-		try {
-			Path path = Paths.get(file.getAbsolutePath());
-			List<String> lines = Files.readAllLines(path, Charset.forName("UTF-8"));
-			// System.out.println(lines);
-			lines = lines.stream().map(line -> line.substring(18, line.length())).collect(Collectors.toList());
-			List<Point> allPoints = new ArrayList<>();
-			lines.forEach(line -> {
-				String northDegree = line.substring(0, 3);
-				String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
-				// System.out.println(northDegree+" "+northMinutes);
-				String eastDegree = line.substring(10, 13);
-				String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
-				// System.out.println(eastDegree+" "+eastMinutes);
-				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
-				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
-				allPoints.add(new Point(north, east));
-			});
-			return allPoints;
-		} catch (Exception e) {
-			e.printStackTrace();
+	public static final List<MyPoint> getPointsFromTxt(File file) throws IOException {
+		if (file == null) {
+			return Collections.emptyList();
 		}
-		return null;
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, Charset.forName("UTF-8"));
+		// System.out.println(lines);
+		lines = lines.stream().filter(l -> isValidLine(l)).map(line -> line.substring(18, line.length())).collect(Collectors.toList());
+		List<MyPoint> allPoints = new ArrayList<>();
+		lines.forEach(line -> {
+			String northDegree = line.substring(0, 3);
+			String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
+			// System.out.println(northDegree+" "+northMinutes);
+			String eastDegree = line.substring(10, 13);
+			String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
+			// System.out.println(eastDegree+" "+eastMinutes);
+			GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
+			GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
+			allPoints.add(new MyPoint(north, east));
+		});
+		return allPoints;
+	}
+
+	private static boolean isValidLine(String line) {
+		if (line.contains("Fehler")) {
+			// System.out.println("Error in line content:\n" + line);
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Deprecated

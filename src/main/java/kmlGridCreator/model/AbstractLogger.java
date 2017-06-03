@@ -1,4 +1,4 @@
-package kmlGridCreator.model;
+package main.java.kmlGridCreator.model;
 
 public abstract class AbstractLogger implements ConsolePrintable {
 
@@ -15,6 +15,7 @@ public abstract class AbstractLogger implements ConsolePrintable {
 		}
 	}
 
+	@Unused
 	public final void logInOneLine(String message, LogLevel loglevel) {
 		if (loglevel.shouldBeLogged(this)) {
 			setConsoleText(message);

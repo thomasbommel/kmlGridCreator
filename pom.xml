@@ -46,6 +46,20 @@
 			<version>2.2.0</version>
 		</dependency>
 		<!-- ==================================== -->
+
+		<!-- for testing -->
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.11</version>
+		</dependency>
+		<!-- ==================================== -->
+
+
+
+
+
 	</dependencies>
 
 

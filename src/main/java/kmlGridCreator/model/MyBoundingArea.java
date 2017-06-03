@@ -1,4 +1,4 @@
-package kmlGridCreator.model;
+package main.java.kmlGridCreator.model;
 
 import java.util.ArrayList;
 import java.util.Collections;

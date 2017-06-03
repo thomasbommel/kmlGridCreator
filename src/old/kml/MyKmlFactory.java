@@ -16,6 +16,7 @@ import old.map.MyOldBoundingArea;
 import old.utils.Logger;
 import old.utils.Logger.LogLevel;
 
+@Deprecated
 public class MyKmlFactory {
 	private static final old.utils.Logger log = new Logger(LogLevel.DEBUG);
 

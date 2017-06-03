@@ -1,4 +1,4 @@
-package kmlGridCreator.utils;
+package main.java.kmlGridCreator.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,16 +10,17 @@ import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.LineStyle;
 import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
-import kmlGridCreator.model.MyBoundingArea;
+import main.java.kmlGridCreator.model.MyBoundingArea;
+import main.java.kmlGridCreator.model.Unused;
 
 public class MyKmlFactory {
 
 	private Kml kml;
 	private Document document;
 
-	public MyKmlFactory() {
+	public MyKmlFactory(String documentName) {
 		this.kml = new Kml();
-		this.document = this.kml.createAndSetDocument().withName("kmlDocument");
+		this.document = this.kml.createAndSetDocument().withName(documentName);
 
 		final LineStyle linestyle = document.createAndAddStyle().withId("linestyle").createAndSetLineStyle().withColor("FFC0C0C0").withWidth(1.0);
 		final PolyStyle poly1 = document.createAndAddStyle().withId("polystyle").createAndSetPolyStyle().withFill(true).withColor("B2FFFFFF");
@@ -35,7 +36,12 @@ public class MyKmlFactory {
 		document.createAndAddStyle().withId("poly5").withPolyStyle(poly5).withLineStyle(linestyle);
 	}
 
+	@Unused
 	public void addPointsToKml(List<Point> points) {
+		if (points == null) {
+			return;
+		}
+
 		for (int i = 0; i < points.size(); i++) {
 			Point kmlPoint = points.get(i);
 			document.createAndAddPlacemark().withOpen(Boolean.FALSE).createAndSetPoint().addToCoordinates(kmlPoint.getLongitude(),
@@ -46,7 +52,8 @@ public class MyKmlFactory {
 	public void saveKmlFile(File outputFile) {
 		try {
 			kml.marshal(outputFile);
-			System.out.println("kml " + outputFile.getAbsolutePath() + " saved");
+			// System.out.println("kml " + outputFile.getAbsolutePath() + "
+			// saved");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -100,6 +107,14 @@ public class MyKmlFactory {
 		// .addToCoordinates(sw.getLongitude() + "," + sw.getLatitude())
 		// .addToCoordinates(nw.getLongitude() + "," + nw.getLatitude());
 
+	}
+
+	public Kml getKml() {
+		return kml;
+	}
+
+	public Document getDocument() {
+		return document;
 	}
 
 }

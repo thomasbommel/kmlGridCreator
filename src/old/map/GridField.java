@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.peertopark.java.geocalc.Point;
 
+@Deprecated
 public class GridField {
 	private Point nwPoint;
 	private List<Point> pointsInThisGridField;

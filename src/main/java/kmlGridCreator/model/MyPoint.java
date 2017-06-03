@@ -5,6 +5,11 @@ import com.peertopark.java.geocalc.Point;
 
 import main.java.kmlGridCreator.utils.MathUtils;
 
+/**
+ * this class does the same as the {@link com.peertopark.java.geocalc.Point} class,<br/> only the <b>equals method is changed</b>
+ * @author Bommel
+ *
+ */
 public class MyPoint extends Point {
 
 	public MyPoint(Coordinate latitude, Coordinate longitude) {

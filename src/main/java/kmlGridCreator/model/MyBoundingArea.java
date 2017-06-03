@@ -3,8 +3,10 @@ package main.java.kmlGridCreator.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.peertopark.java.geocalc.BoundingArea;
+import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.Point;
 
 public class MyBoundingArea extends BoundingArea {
@@ -22,7 +24,7 @@ public class MyBoundingArea extends BoundingArea {
 		return this.id;
 	}
 
-	public boolean addPoint(Point p) {
+	public boolean tryToAddPoint(Point p) {
 		if (this.isContainedWithin(p)) {
 			points.add(p);
 			return true;
@@ -34,8 +36,8 @@ public class MyBoundingArea extends BoundingArea {
 		return this.points.size();
 	}
 
-	public List<Point> getPoints() {
-		return this.points;
+	public List<MyPoint> getPoints() {
+		return this.points.stream().map(x->new MyPoint(new DegreeCoordinate(x.getLatitude()), new DegreeCoordinate(x.getLongitude()))).collect(Collectors.toList());
 	}
 
 }

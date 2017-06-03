@@ -10,12 +10,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -31,6 +33,7 @@ public class GuiView extends View {
 
 	private JTextArea console;
 	private MyJButton selectInputFileBtn, selectOutputFileBtn, startCreationBtn;
+	private JCheckBox  addPointsToKMLChkBox;
 	private List<MyBoundingArea> grid;
 
 	private MainApplication app;
@@ -39,11 +42,10 @@ public class GuiView extends View {
 	private GuiLogger log;
 	private Lock lock = new ReentrantLock();
 
-	public GuiView(MainApplication app, MapDataModel model) {
-		super(model);
+	public GuiView(MainApplication app) {
+		super();
 
 		log = new GuiLogger(LogLevel.DEBUG, this);
-
 		this.frame = new JFrame(app.getTitle());
 		this.app = app;
 
@@ -115,7 +117,7 @@ public class GuiView extends View {
 		});
 
 		this.contentPane.add(selectOutputFileBtn);
-
+		
 		this.startCreationBtn = new MyJButton(false, "starte Generierung", "starte Generierung",
 				"startet die Berechnung der Punkte und speichert dann die .kml Datei", "derzeit nicht möglich");
 		this.startCreationBtn.addActionListener(a -> {
@@ -138,6 +140,9 @@ public class GuiView extends View {
 		});
 
 		this.contentPane.add(startCreationBtn);
+		
+		this.addPointsToKMLChkBox = new JCheckBox("add points to kml");
+		this.contentPane.add(addPointsToKMLChkBox);
 
 		this.console = new JTextArea(28, 70);
 		this.console.setFont(this.console.getFont().deriveFont(14f));
@@ -219,6 +224,11 @@ public class GuiView extends View {
 	public void setViewConsoleText(String msg) {
 		this.console.setText(msg + "\n");
 	}
+	
+	@Override
+	public boolean addPointsToKml() {
+		return this.addPointsToKMLChkBox.isSelected();
+	}
 
 	// =====================================================================
 	public List<MyBoundingArea> getGrid() {
@@ -268,5 +278,8 @@ public class GuiView extends View {
 	public JPanel getContentPane() {
 		return contentPane;
 	}
+
+
+	
 
 }

@@ -1,7 +1,7 @@
 package main.test.kmlGridCreator.utils;
 
-import org.junit.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import main.java.kmlGridCreator.utils.MathUtils;
 

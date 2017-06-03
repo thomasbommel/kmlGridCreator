@@ -1,7 +1,11 @@
 package main.java.kmlGridCreator.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
@@ -14,14 +18,14 @@ public class MyMap {
 	private MyPoint nwPoint, nePoint, swPoint, sePoint;
 	private MyPoint[] corners;
 	private List<MyBoundingArea> boundingAreas;
-	private final int GRID_SIZE_IN_M;
+	private int GRID_SIZE_IN_M;
 	private View view;
 	private List<MyPoint> points;
 
-	public MyMap(List<MyPoint> points, int gridSize, View view) {
+	public MyMap(List<MyPoint> points, int gridSizeInM, View view) {
 		super();
 		this.points = points;
-		this.GRID_SIZE_IN_M = gridSize;
+		this.GRID_SIZE_IN_M = gridSizeInM;
 		this.view = view;
 
 		this.corners = GeoUtil.getCornersNwNeSeSw(points);
@@ -31,7 +35,7 @@ public class MyMap {
 		this.swPoint = corners[3];
 		this.boundingAreas = generateBoundingAreas(points);
 	}
-
+	
 	private List<MyBoundingArea> generateBoundingAreas(List<MyPoint> points) {
 		List<MyBoundingArea> areas = new ArrayList<>();
 		Point startPointNW = nwPoint;
@@ -82,7 +86,7 @@ public class MyMap {
 				@Override
 				public void run() {
 					for (final MyBoundingArea ba : boundingAreas) {
-						if (ba.addPoint(p)) {
+						if (ba.tryToAddPoint(p)) {
 							return;
 						}
 					}
@@ -97,9 +101,34 @@ public class MyMap {
 						view.formatForConsole(boundingAreas.size()) + " Feldern hinzugefügt, "
 						+ view.formatForConsole(points.size() - addedPointsCount)
 						+ " Punkte konnten keinem Feld zugeordnet werden.");
-		System.out.println(System.currentTimeMillis() - starttime);
+		//System.out.println(System.currentTimeMillis() - starttime);
 	}
-
+	
+	public int getAveragePointCountPerBoundingArea(){
+		if(points == null || points.size()==0){
+			return 0;
+		}
+		return Math.round(boundingAreas.size()/points.size());
+	}
+	
+	
+	public Map<Integer, Integer> getPointCountToBoundingAreaCountMap(){
+		
+		Map<Integer, List<MyBoundingArea>> map = boundingAreas.stream()
+				.collect(Collectors.groupingBy(x->x.getPointCount()));
+		Map<Integer,Integer> mapFromPointCountToCorrespondingBAcount= new HashMap<>();
+		map.entrySet().forEach(x->mapFromPointCountToCorrespondingBAcount.put(x.getKey(), x.getValue().size()));
+		
+		// add missing (with no corresponding BoundingArea)
+		int max = mapFromPointCountToCorrespondingBAcount.keySet().stream().mapToInt(Integer::intValue).max().orElse(0);
+		for(int i=0;i<=max;i++){
+			if(!mapFromPointCountToCorrespondingBAcount.containsKey(new Integer(i))){
+				mapFromPointCountToCorrespondingBAcount.put(new Integer(i), 0);
+			}
+		}
+		return mapFromPointCountToCorrespondingBAcount;
+	}
+	
 	// ==================================================
 	public Point getNwPoint() {
 		return nwPoint;

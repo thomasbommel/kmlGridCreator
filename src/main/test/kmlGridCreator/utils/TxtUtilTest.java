@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.List;
 
-import org.junit.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.peertopark.java.geocalc.DegreeCoordinate;
 
@@ -39,9 +39,9 @@ public class TxtUtilTest {
 		Assert.assertEquals(TxtUtil.getPointsFromTxt(null).size(), 0);
 	}
 
-	@Test(expected = NoSuchFileException.class)
+	@Test(expectedExceptions = NoSuchFileException.class)
 	public void testgetPointsFromInvalidFile() throws IOException {
-		TxtUtil.getPointsFromTxt(new File("ipoqeipwqie")).size();
+		TxtUtil.getPointsFromTxt(new File("iAmInvalid")).size();
 	}
 
 }

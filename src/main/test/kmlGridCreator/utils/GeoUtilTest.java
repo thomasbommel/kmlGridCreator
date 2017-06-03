@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.peertopark.java.geocalc.DegreeCoordinate;
 
@@ -31,12 +31,12 @@ public class GeoUtilTest {
 		Assert.assertEquals(sw, cornersNwNeSeSw[3], "SW corner point not correct");
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expectedExceptions = NullPointerException.class)
 	public void getCornersNwNeSeSwWithNullValue() throws Exception {
 		GeoUtil.getCornersNwNeSeSw(null);
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test(expectedExceptions = NoSuchElementException.class)
 	public void getCornersNwNeSeSwWithEmptyList() throws Exception {
 		GeoUtil.getCornersNwNeSeSw(Collections.emptyList());
 	}

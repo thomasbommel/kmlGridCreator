@@ -12,10 +12,9 @@ public abstract class View {
 
 	private MapDataModel model;
 
-	public View(MapDataModel model) {
-		this.model = model;
+	public View() {
+		this.model = new MapDataModel();
 		model.setView(this);
-
 	}
 
 	protected abstract File selectInputFile();
@@ -27,6 +26,8 @@ public abstract class View {
 	public abstract void setViewConsoleText(String msg);
 
 	public abstract String getCurrentText();
+	
+	public abstract boolean addPointsToKml();
 
 	public MapDataModel getModel() {
 		return model;

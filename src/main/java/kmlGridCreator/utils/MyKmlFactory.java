@@ -11,6 +11,7 @@ import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.LineStyle;
 import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
 import main.java.kmlGridCreator.model.MyBoundingArea;
+import main.java.kmlGridCreator.model.MyPoint;
 import main.java.kmlGridCreator.model.Unused;
 
 public class MyKmlFactory {
@@ -37,7 +38,7 @@ public class MyKmlFactory {
 	}
 
 	@Unused
-	public void addPointsToKml(List<Point> points) {
+	public void addPointsToKml(List<MyPoint> points) {
 		if (points == null) {
 			return;
 		}

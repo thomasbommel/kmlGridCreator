@@ -5,19 +5,20 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.Point;
 
+import main.java.kmlGridCreator.model.MyPoint;
 import main.java.kmlGridCreator.utils.MyKmlFactory;
 import main.test.kmlGridCreator.TestUtil;
 
 public class MyKmlFactoryTest {
 
 	@Test
-	public void testAddPointsToKmlNulLValue() {
+	public void testAddPointsToKmlNullValue() {
 		MyKmlFactory kml = new MyKmlFactory("testKmlDocument");
 		kml.addPointsToKml(null);
 	}
@@ -35,10 +36,10 @@ public class MyKmlFactoryTest {
 	@Test
 	public void testAddPointsToKmlManyPoints() throws FileNotFoundException {
 		MyKmlFactory kml = new MyKmlFactory("testKmlDocument");
-		List<Point> points = new ArrayList<>();
+		List<MyPoint> points = new ArrayList<>();
 
 		for (int i = 0; i < 50000; i++) {
-			points.add(new Point(new DegreeCoordinate(Math.random() * 10000), new DegreeCoordinate(Math.random() * 10000)));
+			points.add(new MyPoint(new DegreeCoordinate(Math.random() * 10000), new DegreeCoordinate(Math.random() * 10000)));
 		}
 		kml.addPointsToKml(points);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

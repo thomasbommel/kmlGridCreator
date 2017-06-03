@@ -27,8 +27,11 @@ public class MapDataModel {
 		view.printToViewConsole(" Datei " + fileToWriteTo.getName() + " wird erstellt.");
 		for (MyBoundingArea area : map.getBoundingAreas()) {
 			kml.addBoundingArea(area);
+			if(view.addPointsToKml()){
+				kml.addPointsToKml(area.getPoints()); 
+			}
 		}
-
+		
 		kml.saveKmlFile(fileToWriteTo);
 		view.printToViewConsole(" Datei " + fileToWriteTo.getName() + " erstellt und gespeichert.");
 

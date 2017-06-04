@@ -196,7 +196,7 @@ public class GuiView extends View {
 				try {
 					File selectedFile = selectOutputFile(new FileNameExtensionFilter("csv files (*.csv)", "csv"));
 					if (selectedFile != null) {
-						this.getModel().setFileToWriteTo(selectedFile);
+						this.getModel().setFileToWriteCSVTo(selectedFile);
 						this.selectCSVOutputFileBtn.setEnabledText("CSV Ausg. ändern");
 						this.selectOutputFileBtn.setToolTipText(
 								"Mit diesem Button kann die Auswahl der CSV Ausgabedatei geändert werden.");

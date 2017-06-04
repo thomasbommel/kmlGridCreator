@@ -23,6 +23,7 @@ public class MapDataModel {
 	
 
 	public void startCreation() throws IOException, OverlappingPolyStylesException {
+		
 		kml.createPolyStylesInDocument();
 		view.printToViewConsole("Die Generierung des kml Files wurde gestartet.");
 
@@ -47,11 +48,11 @@ public class MapDataModel {
 			}
 		}
 		kml.saveKmlFile(fileToWriteTo);
-		view.printToViewConsole(" Datei " + fileToWriteTo.getName() + " erstellt und gespeichert.");
+		view.printToViewConsole("Datei " + fileToWriteTo.getName() + " erstellt und gespeichert.");
 
 		if(fileToWriteCSVTo != null){
 			CSVCreatorUtils.savePointCountToBoundingAreaCountMapToCSV(map.getPointCountToBoundingAreaCountMap(), fileToWriteCSVTo);
-			//view.printToViewConsole("csv Datei: '"+fileToWriteCSVTo.getName()+"' erstellt.");
+			view.printToViewConsole("CSV Datei: "+fileToWriteCSVTo.getName()+" erstellt und gespeichert.");
 		}
 	}
 
@@ -78,7 +79,11 @@ public class MapDataModel {
 	public void setFileToWriteCSVTo(File fileToWriteCSVTo) {
 		this.fileToWriteCSVTo = fileToWriteCSVTo;
 	}
-
+	
+	public File getFileTroWriteCSVTo(){
+		return this.fileToWriteCSVTo;
+	}
+	
 	public View getView() {
 		return view;
 	}

@@ -7,19 +7,21 @@ import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MapDataModel;
 import main.java.kmlGridCreator.model.MyMap;
 import main.java.kmlGridCreator.model.MyPoint;
 import main.java.kmlGridCreator.utils.CSVCreatorUtils;
+import main.java.kmlGridCreator.utils.MyKmlFactory;
 import main.java.kmlGridCreator.view.TestView;
 import main.test.kmlGridCreator.TestUtil;
 
 public class TestMyMap {
 
 	@Test
-	public void testGetPointCountToBoundingAreaCountMap() throws IOException {
+	public void testGetPointCountToBoundingAreaCountMap() throws IOException, OverlappingPolyStylesException {
 		List<MyPoint> testPoints = TestUtil.getTestPoints();
-		MyMap map = new MyMap(testPoints, 1000,new TestView(new MapDataModel()));
+		MyMap map = new MyMap(testPoints, 1000,new TestView(new MapDataModel(new MyKmlFactory("test"))));
 		map.addPointsToTheAreas();
 
 		Map<Integer,Integer> pcToBaCount = map.getPointCountToBoundingAreaCountMap();

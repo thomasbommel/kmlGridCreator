@@ -8,15 +8,24 @@ import java.util.Locale;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import de.micromata.opengis.kml.v_2_2_0.KmlFactory;
+import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MapDataModel;
+import main.java.kmlGridCreator.utils.MyKmlFactory;
 
 public abstract class View {
 
 	private MapDataModel model;
+	private MyKmlFactory kml;
 
-	public View() {
-		this.model = new MapDataModel();
+	public View() throws OverlappingPolyStylesException {
+		this.kml = new MyKmlFactory("testdocument");
+		this.model = new MapDataModel(kml);
 		model.setView(this);
+	}
+	
+	public MyKmlFactory getKmlFactory(){
+		return this.kml;
 	}
 
 	protected abstract File selectInputFile();

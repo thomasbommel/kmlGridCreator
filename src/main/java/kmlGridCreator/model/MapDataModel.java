@@ -15,8 +15,15 @@ public class MapDataModel {
 	private MyMap map;
 	private File fileToReadFrom, fileToWriteTo, fileToWriteCSVTo;
 	private View view;
+	private MyKmlFactory kml;
+	
+	public MapDataModel(MyKmlFactory kml){
+		this.kml= kml;
+	}
+	
 
-	public void startCreation() throws IOException {
+	public void startCreation() throws IOException, OverlappingPolyStylesException {
+		kml.createPolyStylesInDocument();
 		view.printToViewConsole("Die Generierung des kml Files wurde gestartet.");
 
 		map = new MyMap(TxtUtil.getPointsFromTxt(fileToReadFrom), 1000, view);
@@ -24,14 +31,6 @@ public class MapDataModel {
 		map.addPointsToTheAreas();
 		view.printToViewConsole(
 				"--- Die Zuordnung ist beendet ---");
-
-		MyKmlFactory kml = null;
-		try {
-			kml = new MyKmlFactory("generatedKmlDocument");
-		} catch (OverlappingPolyStylesException e) {
-			e.printStackTrace();
-			view.printToViewConsole("FEHLER:"+e.getMessage());///FIXME
-		}
 
 		view.printToViewConsole(" Datei " + fileToWriteTo.getName() + " wird erstellt.");
 		for (MyBoundingArea area : map.getBoundingAreas()) {
@@ -83,9 +82,16 @@ public class MapDataModel {
 	public View getView() {
 		return view;
 	}
-
+	
 	public void setView(View view) {
 		this.view = view;
 	}
+
+	public MyKmlFactory getKmlFactory(){
+		return this.kml;
+	}
+
+	
+	
 
 }

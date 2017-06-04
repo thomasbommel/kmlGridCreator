@@ -1,5 +1,6 @@
 package main.java.kmlGridCreator.utils;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +37,9 @@ public class MyKmlFactory {
 		createPolyStyles();
 	}
 
+	
+	
+	
 	private void createPolyStyles() throws OverlappingPolyStylesException {
 		try {
 			List<String> lines = Files.readAllLines(Paths.get("colors.txt"), Charset.forName("UTF-8"));
@@ -46,45 +50,41 @@ public class MyKmlFactory {
 					int min = Integer.parseInt(x.substring(0, 3));
 					int max = Integer.parseInt(x.substring(4, 7));
 					String color = x.substring(8, 23);
-					//System.out.println(color);
+					// System.out.println(color);
 
 					int redInDec = Integer.parseInt(color.substring(0, 3));
 					int blueInDec = Integer.parseInt(color.substring(4, 7));
 					int greenInDec = Integer.parseInt(color.substring(8, 11));
 					int alphaInDec = Integer.parseInt(color.substring(12, 15));
 
-					String colorInHex = toFixedLength2(Integer.toHexString(alphaInDec)) + ""
-							+ toFixedLength2(Integer.toHexString(blueInDec)) + ""
-							+ toFixedLength2(Integer.toHexString(greenInDec)) + ""
-							+ toFixedLength2(Integer.toHexString(redInDec));
-					//System.out.println(colorInHex);
+					Color colo = new Color(redInDec, greenInDec, blueInDec, alphaInDec);
+					
+//					String colorInHex = StringUtils.toFixedLength2(Integer.toHexString(alphaInDec)) + ""
+//							+ StringUtils.toFixedLength2(Integer.toHexString(blueInDec)) + ""
+//							+ StringUtils.toFixedLength2(Integer.toHexString(greenInDec)) + ""
+//							+ StringUtils.toFixedLength2(Integer.toHexString(redInDec));
+					// System.out.println(colorInHex);
 
 					try {
-						polyStyleHandler.add(new MyPolyStyle(min, max, colorInHex));
+						polyStyleHandler.add(new MyPolyStyle(min, max,colo));
 					} catch (OverlappingPolyStylesException e) {
 						e.printStackTrace();
 					}
 				}
 			});
 		} catch (IOException e) {
-			e.printStackTrace();
-			polyStyleHandler.add(new MyPolyStyle(0, 10, "B2FFFFFF"));
-			polyStyleHandler.add(new MyPolyStyle(11, 20, "B28C8CFF"));
-			polyStyleHandler.add(new MyPolyStyle(21, 30, "B2000058"));
-			polyStyleHandler.add(new MyPolyStyle(31, 100, "B20000B7"));
+			//e.printStackTrace();
+			System.err.println("default points used because colors.txt was missing in kmlGridCreator folder");
+			polyStyleHandler.add(new MyPolyStyle(0, 10, Color.white));
+			polyStyleHandler.add(new MyPolyStyle(11, 20,Color.yellow));
+			polyStyleHandler.add(new MyPolyStyle(21, 30, Color.orange));
+			polyStyleHandler.add(new MyPolyStyle(31, 100,Color.red));
 		}
 
-		createPolyStylesInDocument();
+		
 	}
 
-	private String toFixedLength2(String s) {
-		while (s.length() < 2) {
-			s = "0" + s;
-		}
-		return s;
-	}
-
-	private void createPolyStylesInDocument() {
+	public  void createPolyStylesInDocument() {
 		final LineStyle linestyle = document.createAndAddStyle().withId("linestyle").createAndSetLineStyle()
 				.withColor("FFC0C0C0").withWidth(1.0);
 		polyStyleHandler.getPolyStyles().forEach(x -> {
@@ -143,6 +143,10 @@ public class MyKmlFactory {
 
 	public Document getDocument() {
 		return document;
+	}
+
+	public PolyStyleHandler getPolyStyleHandler() {
+		return polyStyleHandler;
 	}
 
 }

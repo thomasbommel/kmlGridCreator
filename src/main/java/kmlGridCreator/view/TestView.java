@@ -4,13 +4,14 @@ import java.io.File;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MapDataModel;
 
 public class TestView extends View{
 
 	public boolean addPointsToKml;
 	
-	public TestView(MapDataModel model) {
+	public TestView(MapDataModel model) throws OverlappingPolyStylesException {
 		super();
 	}
 

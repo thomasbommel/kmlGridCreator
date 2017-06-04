@@ -4,31 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import main.java.kmlGridCreator.exceptions.NoPolyStyleCoveringThisPointCountException;
+import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
+
 public final class PolyStyleHandler {
-	private List<PolyStyle> polyStyles;
+	private List<MyPolyStyle> polyStyles;
 
 	public PolyStyleHandler() {
 		this.polyStyles = new ArrayList<>();
 	}
 
-	public List<PolyStyle> getPolyStyles() {
+	public List<MyPolyStyle> getPolyStyles() {
 		return polyStyles;
 	}
 
-	public void add(PolyStyle polyStyle) {
+	public void add(MyPolyStyle polyStyle) throws OverlappingPolyStylesException {
 		if (polyStyles.stream().anyMatch(x -> x.rangeCoveredByThisPolyStyle(polyStyle.getMinPointCount(), polyStyle.getMaxPointCount()))) {
-			throw new IllegalArgumentException(
+			throw new OverlappingPolyStylesException(
 					"the range [" + polyStyle.getMinPointCount() + "," + polyStyle.getMaxPointCount() + "] is already used by an other Polystyle");
 		} else {
 			this.polyStyles.add(polyStyle);
 		}
 	}
 
-	public PolyStyle getPolyStyleForPointCount(int pointCount) throws OverlappingPolyStylesException {
-		List<PolyStyle> polyStylesCoveringThisPointCount = polyStyles.stream().filter(x -> x.countCoveredByThisPolyStyle(pointCount))
+	public MyPolyStyle getPolyStyleForPointCount(int pointCount) throws OverlappingPolyStylesException, NoPolyStyleCoveringThisPointCountException {
+		List<MyPolyStyle> polyStylesCoveringThisPointCount = polyStyles.stream().filter(x -> x.countCoveredByThisPolyStyle(pointCount))
 				.collect(Collectors.toList());
 
-		if (polyStylesCoveringThisPointCount.size() > 1) {
+		if(polyStylesCoveringThisPointCount.size()==0){
+			throw new NoPolyStyleCoveringThisPointCountException("there is no PolyStyle covering a pointcount of "+pointCount);
+		}else if(polyStylesCoveringThisPointCount.size() > 1) {
 			throw new OverlappingPolyStylesException("there are more than one PolyStyle which cover a pointcount of " + pointCount);
 		} else {
 			return polyStylesCoveringThisPointCount.get(0);

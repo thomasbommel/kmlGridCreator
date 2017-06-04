@@ -2,6 +2,8 @@ package main.java.kmlGridCreator.view;
 
 import java.io.File;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import main.java.kmlGridCreator.model.MapDataModel;
 
 public class TestView extends View{
@@ -18,7 +20,7 @@ public class TestView extends View{
 	}
 
 	@Override
-	protected File selectOutputFile() {
+	protected File selectOutputFile(FileNameExtensionFilter filter) {
 		throw new IllegalAccessError();
 	}
 
@@ -38,7 +40,7 @@ public class TestView extends View{
 	}
 
 	@Override
-	public boolean addPointsToKml() {
+	public boolean addPointsToKmlEnabled() {
 		return addPointsToKml;
 	}
 

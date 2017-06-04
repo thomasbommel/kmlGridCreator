@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
+
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -22,13 +25,16 @@ import main.java.kmlGridCreator.view.TestView;
 import main.test.kmlGridCreator.TestUtil;
 
 public class CSVCreatorTest {
-
+	
 	@Test
 	public void testGetPointCountToBoundingAreaCountMap() throws IOException {
 		List<MyPoint> testPoints = TestUtil.getTestPoints();
 		MyMap map = new MyMap(testPoints, 1000, new TestView(new MapDataModel()));
 		map.addPointsToTheAreas();
 
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("dsad", "kml");
+		System.out.println(filter.getExtensions()[0]);
+		
 		File file = new File(TestUtil.TEST_FOLDER_DIRECTORY + "testGetPointCountToBoundingAreaCountMap_"
 				+ System.currentTimeMillis() + ".csv");
 		CSVCreatorUtils.savePointCountToBoundingAreaCountMapToCSV(map.getPointCountToBoundingAreaCountMap(), file);

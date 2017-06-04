@@ -78,7 +78,7 @@ public class MyMap {
 
 		for (int i = 0; i < pointsSize; i++) {
 			if (i % 10000 == 0) {
-				view.printToViewConsole("bisher " + view.formatForConsole(i + 10000) + " von " + view.formatForConsole(pointsSize) + " Punkten hinzugefügt.");
+				view.printToViewConsole("bisher <=" + view.formatForConsole(i + 10000) + " von " + view.formatForConsole(pointsSize) + " Punkten hinzugefügt.");
 			}
 
 			final Point p = points.get(i);

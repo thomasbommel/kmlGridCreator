@@ -3,11 +3,13 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="main.test.kmlGridCreator.utils.CSVCreatorTest">
+      <class name="main.test.kmlGridCreator.utils.MyKmlFactoryTest">
         <methods>
-          <include name="testGetPointCountToBoundingAreaCountMap"/>
+          <include name="testAddPointsToKmlNullValue"/>
+          <include name="testAddPointsToKmlManyPoints"/>
+          <include name="testAddPointsToKmlNoPoints"/>
         </methods>
-      </class> <!-- main.test.kmlGridCreator.utils.CSVCreatorTest -->
+      </class> <!-- main.test.kmlGridCreator.utils.MyKmlFactoryTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

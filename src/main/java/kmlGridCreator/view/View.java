@@ -6,6 +6,8 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import main.java.kmlGridCreator.model.MapDataModel;
 
 public abstract class View {
@@ -19,7 +21,7 @@ public abstract class View {
 
 	protected abstract File selectInputFile();
 
-	protected abstract File selectOutputFile();
+	protected abstract File selectOutputFile(FileNameExtensionFilter extensionFilter);
 
 	public abstract void printToViewConsole(String msg);
 
@@ -27,7 +29,7 @@ public abstract class View {
 
 	public abstract String getCurrentText();
 	
-	public abstract boolean addPointsToKml();
+	public abstract boolean addPointsToKmlEnabled();
 
 	public MapDataModel getModel() {
 		return model;
@@ -44,5 +46,7 @@ public abstract class View {
 		formatter.setDecimalFormatSymbols(symbols);
 		return formatter;
 	}
+
+
 
 }

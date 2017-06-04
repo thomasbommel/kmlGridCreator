@@ -11,16 +11,21 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 
@@ -32,15 +37,16 @@ import main.java.kmlGridCreator.model.Unused;
 public class GuiView extends View {
 
 	private JTextArea console;
-	private MyJButton selectInputFileBtn, selectOutputFileBtn, startCreationBtn;
+	private MyJButton selectInputFileBtn, selectOutputFileBtn, startCreationBtn,selectCSVOutputFileBtn;
 	private JCheckBox  addPointsToKMLChkBox;
+	private JColorChooser chooser;
 	private List<MyBoundingArea> grid;
 
 	private MainApplication app;
 	private JFrame frame;
 	private JPanel contentPane;
 	private GuiLogger log;
-	private Lock lock = new ReentrantLock();
+	private Lock buttonLock = new ReentrantLock(); // this lock is needed because otherwise you can click a button during the generation
 
 	public GuiView(MainApplication app) {
 		super();
@@ -76,7 +82,7 @@ public class GuiView extends View {
 				"Mit diesem Button kann eine Datei, aus der dann gelesen wird, ausgewählt werden.",
 				"es kann derzeit kein Datei zum Einlesen ausgewählt werden");
 		this.selectInputFileBtn.addActionListener(a -> {
-			if (lock.tryLock()) {
+			if (buttonLock.tryLock()) {
 				try {
 					File selectedFile = selectInputFile();
 					if (selectedFile != null) {
@@ -87,7 +93,7 @@ public class GuiView extends View {
 						this.selectOutputFileBtn.setEnabled(true);
 					}
 				} finally {
-					lock.unlock();
+					buttonLock.unlock();
 				}
 			}
 		});
@@ -96,9 +102,9 @@ public class GuiView extends View {
 		this.selectOutputFileBtn = new MyJButton(false, "Ausg. auswählen", "Ausg. auswählen",
 				"Mit diesem Button kann eine Datei, in die dann geschrieben wird, ausgewählt werden", "derzeit nicht möglich");
 		this.selectOutputFileBtn.addActionListener(a -> {
-			if (lock.tryLock()) {
+			if (buttonLock.tryLock()) {
 				try {
-					File selectedFile = selectOutputFile();
+					File selectedFile = selectOutputFile(new FileNameExtensionFilter("kml files (*.kml)", "kml"));
 					if (selectedFile != null) {
 						this.getModel().setFileToWriteTo(selectedFile);
 						this.selectOutputFileBtn.setEnabledText("Ausg. ändern");
@@ -108,10 +114,12 @@ public class GuiView extends View {
 
 						if (this.getModel().getFileToReadFrom() != null && this.getModel().getFileToWriteTo() != null) {
 							this.startCreationBtn.setEnabled(true);
+							this.addPointsToKMLChkBox.setEnabled(true);
+							this.selectCSVOutputFileBtn.setEnabled(true);
 						}
 					}
 				} finally {
-					lock.unlock();
+					buttonLock.unlock();
 				}
 			}
 		});
@@ -125,13 +133,13 @@ public class GuiView extends View {
 			Thread thread = new Thread() {
 				@Override
 				public void run() {
-					if (lock.tryLock()) {
+					if (buttonLock.tryLock()) {
 						try {
 							model.startCreation();
 						} catch (Exception e) {
 							e.printStackTrace();
 						} finally {
-							lock.unlock();
+							buttonLock.unlock();
 						}
 					}
 				}
@@ -141,9 +149,44 @@ public class GuiView extends View {
 
 		this.contentPane.add(startCreationBtn);
 		
-		this.addPointsToKMLChkBox = new JCheckBox("add points to kml");
+		this.addPointsToKMLChkBox = new JCheckBox("Punkte erst.");
+		this.addPointsToKMLChkBox.setToolTipText("legt fest ob die Punkte der '.txt' Datei zu der '.kml' Datei hinzugefügt werden");
+		this.addPointsToKMLChkBox.setEnabled(false);
 		this.contentPane.add(addPointsToKMLChkBox);
-
+		
+		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+		this.contentPane.add(separator);
+		
+		selectCSVOutputFileBtn = new MyJButton(false,"CSV Ausg. wählen" , "CSV Ausg. wählen", "legt den Pfad für die zu erstellende '.csv' Datei fest", "derzeit nicht möglich");
+		selectCSVOutputFileBtn.addActionListener(a->{
+			if (buttonLock.tryLock()) {
+				try {
+					File selectedFile = selectOutputFile(new FileNameExtensionFilter("csv files (*.csv)", "csv"));
+					if (selectedFile != null) {
+						this.getModel().setFileToWriteTo(selectedFile);
+						this.selectCSVOutputFileBtn.setEnabledText("CSV Ausg. ändern");
+						this.selectOutputFileBtn.setToolTipText("Mit diesem Button kann die Auswahl der CSV Ausgabedatei geändert werden.");
+						this.log.info(selectedFile.getName() + " wurde als CSV Ausgabedatei ausgewählt.");
+						this.getModel().setFileToWriteCSVTo(selectedFile);
+					}
+				} finally {
+					buttonLock.unlock();
+				}
+			}
+		});
+		
+		
+		this.contentPane.add(selectCSVOutputFileBtn);
+		
+		chooser = new JColorChooser();
+	
+		for(AbstractColorChooserPanel panel : chooser.getChooserPanels()){
+			if(!panel.getDisplayName().equals("HSL")){
+				chooser.removeChooserPanel(panel);
+			}
+		}
+		this.contentPane.add(chooser);
+		
 		this.console = new JTextArea(28, 70);
 		this.console.setFont(this.console.getFont().deriveFont(14f));
 		final DefaultCaret caret = (DefaultCaret) console.getCaret();
@@ -178,12 +221,12 @@ public class GuiView extends View {
 	}
 
 	@Override
-	protected File selectOutputFile() {
+	protected File selectOutputFile(FileNameExtensionFilter extensionFilter) {
 		String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
 
 		JFileChooser chooser = new JFileChooser();
 		chooser.setPreferredSize(new Dimension(1000, 600));
-		FileNameExtensionFilter fileExtensionFilter = new FileNameExtensionFilter("kml files (*.kml)", "kml");
+		FileNameExtensionFilter fileExtensionFilter = extensionFilter;
 		chooser.setFileFilter(fileExtensionFilter);
 		chooser.setCurrentDirectory(new java.io.File(desktopPath));
 		chooser.setDialogTitle("Ausgabedatei auswählen.");
@@ -194,8 +237,8 @@ public class GuiView extends View {
 		int retrival = chooser.showSaveDialog(null);
 		if (retrival == JFileChooser.APPROVE_OPTION) {
 			File selected = chooser.getSelectedFile();
-			if (!selected.getAbsolutePath().contains(".kml")) {
-				selected = new File(selected.getAbsolutePath() + ".kml");
+			if (!selected.getAbsolutePath().contains("."+extensionFilter.getExtensions()[0])) {
+				selected = new File(selected.getAbsolutePath() + "."+extensionFilter.getExtensions()[0]);
 			}
 			if (fileExtensionFilter.accept(selected)) {
 				if (Files.exists(Paths.get(selected.getAbsolutePath()))) {
@@ -226,7 +269,7 @@ public class GuiView extends View {
 	}
 	
 	@Override
-	public boolean addPointsToKml() {
+	public boolean addPointsToKmlEnabled() {
 		return this.addPointsToKMLChkBox.isSelected();
 	}
 

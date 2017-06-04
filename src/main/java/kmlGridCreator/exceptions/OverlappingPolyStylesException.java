@@ -1,4 +1,4 @@
-package main.java.kmlGridCreator.utils.styles;
+package main.java.kmlGridCreator.exceptions;
 
 public class OverlappingPolyStylesException extends Exception {
 

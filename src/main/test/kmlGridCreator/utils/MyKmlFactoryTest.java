@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.Point;
 
+import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MyPoint;
 import main.java.kmlGridCreator.utils.MyKmlFactory;
 import main.test.kmlGridCreator.TestUtil;
@@ -18,13 +19,13 @@ import main.test.kmlGridCreator.TestUtil;
 public class MyKmlFactoryTest {
 
 	@Test
-	public void testAddPointsToKmlNullValue() {
+	public void testAddPointsToKmlNullValue() throws OverlappingPolyStylesException {
 		MyKmlFactory kml = new MyKmlFactory("testKmlDocument");
 		kml.addPointsToKml(null);
 	}
 
 	@Test
-	public void testAddPointsToKmlNoPoints() throws FileNotFoundException {
+	public void testAddPointsToKmlNoPoints() throws FileNotFoundException, OverlappingPolyStylesException {
 		MyKmlFactory kml = new MyKmlFactory("testKmlDocument");
 		kml.addPointsToKml(new ArrayList<>());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -34,7 +35,7 @@ public class MyKmlFactoryTest {
 	}
 
 	@Test
-	public void testAddPointsToKmlManyPoints() throws FileNotFoundException {
+	public void testAddPointsToKmlManyPoints() throws FileNotFoundException, OverlappingPolyStylesException {
 		MyKmlFactory kml = new MyKmlFactory("testKmlDocument");
 		List<MyPoint> points = new ArrayList<>();
 

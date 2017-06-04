@@ -1,11 +1,13 @@
 package main.java.kmlGridCreator.utils.styles;
 
-public final class PolyStyle {
+import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
+
+public final class MyPolyStyle extends PolyStyle {
 
 	private int minPointCount, maxPointCount;
 	private String color;
 
-	public PolyStyle(int minPointCount, int maxPointCount, String color) {
+	public MyPolyStyle(int minPointCount, int maxPointCount, String color) {
 		super();
 		this.minPointCount = minPointCount;
 		this.maxPointCount = maxPointCount;
@@ -35,5 +37,13 @@ public final class PolyStyle {
 
 	public int getMaxPointCount() {
 		return this.maxPointCount;
+	}
+	
+	public String getId(){
+		return this.minPointCount+"_"+this.maxPointCount;
+	}
+	
+	public String getStyleURL(){
+		return "#"+this.getId();
 	}
 }

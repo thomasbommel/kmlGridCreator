@@ -1,17 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
+<testng-results skipped="0" failed="0" ignored="0" total="16" passed="16">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="95" started-at="2017-06-03T20:52:50Z" finished-at="2017-06-03T20:52:50Z">
+  <suite name="Default suite" duration-ms="1290" started-at="2017-06-04T10:03:08Z" finished-at="2017-06-04T10:03:09Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="95" started-at="2017-06-03T20:52:50Z" finished-at="2017-06-03T20:52:50Z">
+    <test name="Default test" duration-ms="1290" started-at="2017-06-04T10:03:08Z" finished-at="2017-06-04T10:03:09Z">
+      <class name="main.test.kmlGridCreator.utils.GeoUtilTest">
+        <test-method status="PASS" signature="getCornersNwNeSeSwWithEmptyList()[pri:0, instance:main.test.kmlGridCreator.utils.GeoUtilTest@eafc191]" name="getCornersNwNeSeSwWithEmptyList" duration-ms="40" started-at="2017-06-04T12:03:08Z" finished-at="2017-06-04T12:03:08Z">
+          <exception class="java.util.NoSuchElementException">
+            <message>
+              <![CDATA[No value present]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.util.NoSuchElementException: No value present
+	at java.util.Optional.get(Unknown Source)
+	at main.java.kmlGridCreator.utils.GeoUtil.getCornersNwNeSeSw(GeoUtil.java:65)
+	at main.test.kmlGridCreator.utils.GeoUtilTest.getCornersNwNeSeSwWithEmptyList(GeoUtilTest.java:41)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:661)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:869)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1193)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:132)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:230)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:76)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.util.NoSuchElementException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getCornersNwNeSeSwWithEmptyList -->
+        <test-method status="PASS" signature="getCornersNwNeSeSwWithNullValue()[pri:0, instance:main.test.kmlGridCreator.utils.GeoUtilTest@eafc191]" name="getCornersNwNeSeSwWithNullValue" duration-ms="1" started-at="2017-06-04T12:03:08Z" finished-at="2017-06-04T12:03:08Z">
+          <exception class="java.lang.NullPointerException">
+            <message>
+              <![CDATA[pointlist has to be != null]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.NullPointerException: pointlist has to be != null
+	at main.java.kmlGridCreator.utils.GeoUtil.getCornersNwNeSeSw(GeoUtil.java:20)
+	at main.test.kmlGridCreator.utils.GeoUtilTest.getCornersNwNeSeSwWithNullValue(GeoUtilTest.java:36)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:661)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:869)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1193)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:132)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:230)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:76)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.NullPointerException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getCornersNwNeSeSwWithNullValue -->
+        <test-method status="PASS" signature="getCornersNwNeSeSwWithTestFile()[pri:0, instance:main.test.kmlGridCreator.utils.GeoUtilTest@eafc191]" name="getCornersNwNeSeSwWithTestFile" duration-ms="15" started-at="2017-06-04T12:03:08Z" finished-at="2017-06-04T12:03:08Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getCornersNwNeSeSwWithTestFile -->
+      </class> <!-- main.test.kmlGridCreator.utils.GeoUtilTest -->
+      <class name="main.test.kmlGridCreator.utils.MyKmlFactoryTest">
+        <test-method status="PASS" signature="testAddPointsToKmlManyPoints()[pri:0, instance:main.test.kmlGridCreator.utils.MyKmlFactoryTest@612679d6]" name="testAddPointsToKmlManyPoints" duration-ms="1002" started-at="2017-06-04T12:03:08Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testAddPointsToKmlManyPoints -->
+        <test-method status="PASS" signature="testAddPointsToKmlNoPoints()[pri:0, instance:main.test.kmlGridCreator.utils.MyKmlFactoryTest@612679d6]" name="testAddPointsToKmlNoPoints" duration-ms="151" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testAddPointsToKmlNoPoints -->
+        <test-method status="PASS" signature="testAddPointsToKmlNullValue()[pri:0, instance:main.test.kmlGridCreator.utils.MyKmlFactoryTest@612679d6]" name="testAddPointsToKmlNullValue" duration-ms="2" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testAddPointsToKmlNullValue -->
+      </class> <!-- main.test.kmlGridCreator.utils.MyKmlFactoryTest -->
       <class name="main.test.kmlGridCreator.utils.CSVCreatorTest">
-        <test-method status="PASS" signature="testGetPointCountToBoundingAreaCountMap()[pri:0, instance:main.test.kmlGridCreator.utils.CSVCreatorTest@5d5eef3d]" name="testGetPointCountToBoundingAreaCountMap" duration-ms="84" started-at="2017-06-03T22:52:50Z" finished-at="2017-06-03T22:52:50Z">
+        <test-method status="PASS" signature="testGetPointCountToBoundingAreaCountMap()[pri:0, instance:main.test.kmlGridCreator.utils.CSVCreatorTest@11758f2a]" name="testGetPointCountToBoundingAreaCountMap" duration-ms="33" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testGetPointCountToBoundingAreaCountMap -->
       </class> <!-- main.test.kmlGridCreator.utils.CSVCreatorTest -->
+      <class name="main.test.kmlGridCreator.utils.MathUtilsTest">
+        <test-method status="PASS" signature="testNormalValues()[pri:0, instance:main.test.kmlGridCreator.utils.MathUtilsTest@491cc5c9]" name="testNormalValues" duration-ms="1" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testNormalValues -->
+        <test-method status="PASS" signature="testFirstNull()[pri:0, instance:main.test.kmlGridCreator.utils.MathUtilsTest@491cc5c9]" name="testFirstNull" duration-ms="0" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testFirstNull -->
+        <test-method status="PASS" signature="testNullValues()[pri:0, instance:main.test.kmlGridCreator.utils.MathUtilsTest@491cc5c9]" name="testNullValues" duration-ms="0" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testNullValues -->
+        <test-method status="PASS" signature="testSmallDifferencesValues()[pri:0, instance:main.test.kmlGridCreator.utils.MathUtilsTest@491cc5c9]" name="testSmallDifferencesValues" duration-ms="0" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testSmallDifferencesValues -->
+        <test-method status="PASS" signature="testSecondNull()[pri:0, instance:main.test.kmlGridCreator.utils.MathUtilsTest@491cc5c9]" name="testSecondNull" duration-ms="0" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testSecondNull -->
+      </class> <!-- main.test.kmlGridCreator.utils.MathUtilsTest -->
+      <class name="main.test.kmlGridCreator.model.TestMyMap">
+        <test-method status="PASS" signature="testGetPointCountToBoundingAreaCountMap()[pri:0, instance:main.test.kmlGridCreator.model.TestMyMap@e720b71]" name="testGetPointCountToBoundingAreaCountMap" duration-ms="16" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testGetPointCountToBoundingAreaCountMap -->
+      </class> <!-- main.test.kmlGridCreator.model.TestMyMap -->
+      <class name="main.test.kmlGridCreator.utils.TxtUtilTest">
+        <test-method status="PASS" signature="testgetPointsFromInvalidFile()[pri:0, instance:main.test.kmlGridCreator.utils.TxtUtilTest@1b26f7b2]" name="testgetPointsFromInvalidFile" duration-ms="1" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <exception class="java.nio.file.NoSuchFileException">
+            <message>
+              <![CDATA[C:\Users\Bommel\Documents\kmlGridCreator\iAmInvalid]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.nio.file.NoSuchFileException: C:\Users\Bommel\Documents\kmlGridCreator\iAmInvalid
+	at sun.nio.fs.WindowsException.translateToIOException(Unknown Source)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(Unknown Source)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(Unknown Source)
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(Unknown Source)
+	at java.nio.file.Files.newByteChannel(Unknown Source)
+	at java.nio.file.Files.newByteChannel(Unknown Source)
+	at java.nio.file.spi.FileSystemProvider.newInputStream(Unknown Source)
+	at java.nio.file.Files.newInputStream(Unknown Source)
+	at java.nio.file.Files.newBufferedReader(Unknown Source)
+	at java.nio.file.Files.readAllLines(Unknown Source)
+	at main.java.kmlGridCreator.utils.TxtUtil.getPointsFromTxt(TxtUtil.java:31)
+	at main.test.kmlGridCreator.utils.TxtUtilTest.testgetPointsFromInvalidFile(TxtUtilTest.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:661)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:869)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1193)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:132)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:230)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:76)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.nio.file.NoSuchFileException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testgetPointsFromInvalidFile -->
+        <test-method status="PASS" signature="testgetPointsFromTxtNullValue()[pri:0, instance:main.test.kmlGridCreator.utils.TxtUtilTest@1b26f7b2]" name="testgetPointsFromTxtNullValue" duration-ms="0" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testgetPointsFromTxtNullValue -->
+        <test-method status="PASS" signature="testgetPointsFromValidFile()[pri:0, instance:main.test.kmlGridCreator.utils.TxtUtilTest@1b26f7b2]" name="testgetPointsFromValidFile" duration-ms="1" started-at="2017-06-04T12:03:09Z" finished-at="2017-06-04T12:03:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testgetPointsFromValidFile -->
+      </class> <!-- main.test.kmlGridCreator.utils.TxtUtilTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>

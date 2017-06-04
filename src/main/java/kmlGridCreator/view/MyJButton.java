@@ -1,5 +1,7 @@
 package main.java.kmlGridCreator.view;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 
 /**
@@ -10,7 +12,8 @@ public class MyJButton extends JButton {
 
 	private String enabledText, disabledText, enabledToolTipText, disabledToolTipText;
 
-	public MyJButton(boolean enabled, String enabledText, String disabledText, String enabledToolTipText, String disabledToolTipText) {
+	public MyJButton(boolean enabled, String enabledText, String disabledText, String enabledToolTipText,
+			String disabledToolTipText) {
 		super();
 		this.enabledText = enabledText;
 		this.disabledText = disabledText;
@@ -19,19 +22,23 @@ public class MyJButton extends JButton {
 
 		this.setEnabled(enabled);
 
-		if (enabled) {
-			this.setText(enabledText);
-			this.setToolTipText(enabledToolTipText);
-		} else {
-			this.setText(disabledText);
-			this.setToolTipText(disabledToolTipText);
-		}
+		// if (enabled) {
+		// this.setText(enabledText);
+		// this.setToolTipText(enabledToolTipText);
+		// } else {
+		// this.setText(disabledText);
+		// this.setToolTipText(disabledToolTipText);
+		// }
+
+		this.addChangeListener(x -> {
+			this.refreshButtonTexts();
+		});
+		refreshButtonTexts();
 	}
 
 	@Override
 	public void setEnabled(boolean b) {
 		super.setEnabled(b);
-		this.refreshButtonTexts();
 	}
 
 	public void refreshButtonTexts() {
@@ -51,7 +58,6 @@ public class MyJButton extends JButton {
 
 	public void setEnabledText(String enabledText) {
 		this.enabledText = enabledText;
-		refreshButtonTexts();
 	}
 
 	public String getDisabledText() {
@@ -60,7 +66,6 @@ public class MyJButton extends JButton {
 
 	public void setDisabledText(String disabledText) {
 		this.disabledText = disabledText;
-		refreshButtonTexts();
 	}
 
 	public String getEnabledToolTipText() {
@@ -69,7 +74,6 @@ public class MyJButton extends JButton {
 
 	public void setEnabledToolTipText(String enabledToolTipText) {
 		this.enabledToolTipText = enabledToolTipText;
-		refreshButtonTexts();
 	}
 
 	public String getDisabledToolTipText() {
@@ -78,7 +82,5 @@ public class MyJButton extends JButton {
 
 	public void setDisabledToolTipText(String disabledToolTipText) {
 		this.disabledToolTipText = disabledToolTipText;
-		refreshButtonTexts();
 	}
-
 }

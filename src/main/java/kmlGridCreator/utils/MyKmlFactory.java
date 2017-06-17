@@ -30,6 +30,7 @@ public class MyKmlFactory {
 	private PolyStyleHandler polyStyleHandler;
 
 	public MyKmlFactory(String documentName) throws OverlappingPolyStylesException {
+		System.out.println("MyKmlFactory");
 		this.kml = new Kml();
 		this.document = this.kml.createAndSetDocument().withName(documentName);
 
@@ -50,21 +51,15 @@ public class MyKmlFactory {
 					int min = Integer.parseInt(x.substring(0, 3));
 					int max = Integer.parseInt(x.substring(4, 7));
 					String color = x.substring(8, 23);
-					// System.out.println(color);
+					 System.out.println(color);
 
 					int redInDec = Integer.parseInt(color.substring(0, 3));
-					int blueInDec = Integer.parseInt(color.substring(4, 7));
-					int greenInDec = Integer.parseInt(color.substring(8, 11));
+					int greenInDec = Integer.parseInt(color.substring(4, 7));
+					int blueInDec = Integer.parseInt(color.substring(8, 11));
 					int alphaInDec = Integer.parseInt(color.substring(12, 15));
 
 					Color colo = new Color(redInDec, greenInDec, blueInDec, alphaInDec);
 					
-//					String colorInHex = StringUtils.toFixedLength2(Integer.toHexString(alphaInDec)) + ""
-//							+ StringUtils.toFixedLength2(Integer.toHexString(blueInDec)) + ""
-//							+ StringUtils.toFixedLength2(Integer.toHexString(greenInDec)) + ""
-//							+ StringUtils.toFixedLength2(Integer.toHexString(redInDec));
-					// System.out.println(colorInHex);
-
 					try {
 						polyStyleHandler.add(new MyPolyStyle(min, max,colo));
 					} catch (OverlappingPolyStylesException e) {
@@ -73,8 +68,7 @@ public class MyKmlFactory {
 				}
 			});
 		} catch (IOException e) {
-			//e.printStackTrace();
-			System.err.println("default points used because colors.txt was missing in kmlGridCreator folder");
+			System.out.println("default points used because colors.txt was missing in kmlGridCreator folder");
 			polyStyleHandler.add(new MyPolyStyle(0, 10, Color.white));
 			polyStyleHandler.add(new MyPolyStyle(11, 20,Color.yellow));
 			polyStyleHandler.add(new MyPolyStyle(21, 30, Color.orange));

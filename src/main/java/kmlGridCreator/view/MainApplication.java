@@ -2,10 +2,10 @@ package main.java.kmlGridCreator.view;
 
 import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 
-public class MainApplication {
+class MainApplication {
 	private String applicationName;
 
-	public MainApplication(String name) {
+	private MainApplication(String name) {
 		this.applicationName = name;
 
 	}

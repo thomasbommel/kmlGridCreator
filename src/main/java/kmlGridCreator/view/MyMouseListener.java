@@ -3,7 +3,7 @@ package main.java.kmlGridCreator.view;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public abstract class MyMouseListener implements MouseListener{
+abstract class MyMouseListener implements MouseListener{
 
 	public abstract void mouseIsClicked(MouseEvent e);
 	

@@ -8,7 +8,6 @@ import java.util.Locale;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import de.micromata.opengis.kml.v_2_2_0.KmlFactory;
 import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MapDataModel;
 import main.java.kmlGridCreator.utils.MyKmlFactory;

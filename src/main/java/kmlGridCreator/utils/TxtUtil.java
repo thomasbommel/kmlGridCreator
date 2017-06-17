@@ -93,7 +93,7 @@ public class TxtUtil {
 	}
 
 	@Deprecated
-	public static final String selectFilePath(String desktopPath) {
+	private static final String selectFilePath(String desktopPath) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setPreferredSize(new Dimension(1000, 600));
 		FileNameExtensionFilter pdfFilter = new FileNameExtensionFilter("text files (*.txt)", "txt");
@@ -122,6 +122,10 @@ public class TxtUtil {
 			}
 		}
 		return path;
+	}
+	
+	public static List<String> getLinesFromTextFile(String path) throws IOException{
+		return Files.readAllLines(Paths.get(path),Charset.forName("UTF-8"));
 	}
 
 }

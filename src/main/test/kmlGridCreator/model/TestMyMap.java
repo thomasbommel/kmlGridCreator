@@ -11,7 +11,6 @@ import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MapDataModel;
 import main.java.kmlGridCreator.model.MyMap;
 import main.java.kmlGridCreator.model.MyPoint;
-import main.java.kmlGridCreator.utils.CSVCreatorUtils;
 import main.java.kmlGridCreator.utils.MyKmlFactory;
 import main.java.kmlGridCreator.view.TestView;
 import main.test.kmlGridCreator.TestUtil;

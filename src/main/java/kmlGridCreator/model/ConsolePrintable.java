@@ -1,6 +1,6 @@
 package main.java.kmlGridCreator.model;
 
-public interface ConsolePrintable {
+interface ConsolePrintable {
 	public void printToConsole(String text);
 
 	public void setConsoleText(String text);

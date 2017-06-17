@@ -1,18 +1,16 @@
 package main.java.kmlGridCreator.view;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 
 /**
  * this class has the same functionality as a normal JButton except the fact
  * that it handles the button-texts itself
  */
-public class MyJButton extends JButton {
+class MyJButton extends JButton {
 
 	private String enabledText, disabledText, enabledToolTipText, disabledToolTipText;
 
-	public MyJButton(boolean enabled, String enabledText, String disabledText, String enabledToolTipText,
+	MyJButton(boolean enabled, String enabledText, String disabledText, String enabledToolTipText,
 			String disabledToolTipText) {
 		super();
 		this.enabledText = enabledText;
@@ -41,7 +39,7 @@ public class MyJButton extends JButton {
 		super.setEnabled(b);
 	}
 
-	public void refreshButtonTexts() {
+	private void refreshButtonTexts() {
 		if (this.isEnabled()) {
 			this.setText(enabledText);
 			this.setToolTipText(enabledToolTipText);

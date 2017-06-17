@@ -14,15 +14,15 @@ public class MathUtils {
 		return Math.abs(a - b) < EPSILON;
 	}
 
-	public static boolean equals(int a, int b) {
+	public static boolean equals(int a, int b) { // NO_UCD (test only)
 		return equals((double) a, (double) b);
 	}
 
-	public static boolean equals(double a, int b) {
+	public static boolean equals(double a, int b) { // NO_UCD (test only)
 		return equals(a, (double) b);
 	}
 
-	public static boolean equals(int a, double b) {
+	public static boolean equals(int a, double b) { // NO_UCD (test only)
 		return equals((double) a, b);
 	}
 

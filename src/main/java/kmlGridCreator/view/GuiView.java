@@ -1,17 +1,10 @@
 package main.java.kmlGridCreator.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,9 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -48,17 +39,15 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 
-import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
 import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.AbstractLogger.LogLevel;
-import main.java.kmlGridCreator.utils.MyKmlFactory;
-import main.java.kmlGridCreator.utils.styles.ColorUtils;
-import main.java.kmlGridCreator.utils.styles.MyPolyStyle;
 import main.java.kmlGridCreator.model.MapDataModel;
 import main.java.kmlGridCreator.model.MyBoundingArea;
 import main.java.kmlGridCreator.model.Unused;
+import main.java.kmlGridCreator.utils.styles.ColorUtils;
+import main.java.kmlGridCreator.utils.styles.MyPolyStyle;
 
-public class GuiView extends View {
+class GuiView extends View {
 
 	private JTextArea console;
 	private MyJButton selectInputFileBtn, selectOutputFileBtn, startCreationBtn, selectCSVOutputFileBtn;
@@ -75,7 +64,7 @@ public class GuiView extends View {
 													// click a button during the
 													// generation
 
-	public GuiView(MainApplication app) throws OverlappingPolyStylesException {
+	GuiView(MainApplication app) throws OverlappingPolyStylesException {
 		super();
 
 		log = new GuiLogger(LogLevel.DEBUG, this);
@@ -167,8 +156,10 @@ public class GuiView extends View {
 					if (buttonLock.tryLock()) {
 						try {
 							model.startCreation();
+							log.info("---- ALLES FERTIG ----");
 						} catch (Exception e) {
 							e.printStackTrace();
+							log.error("Es ist ein Fehler aufgetreten\n"+e.getMessage());
 						} finally {
 							buttonLock.unlock();
 						}
@@ -217,7 +208,6 @@ public class GuiView extends View {
 			}
 		});
 		this.contentPane.add(showColorChooserBtn);
-	
 
 		this.console = new JTextArea(28, 70);
 		this.console.setFont(this.console.getFont().deriveFont(14f));
@@ -247,36 +237,39 @@ public class GuiView extends View {
 				this.labels = new ArrayList<>();
 				this.saveThisColorSchemeBtn = new JButton("save");
 
-				for (int i = 0; i < getKmlFactory().getPolyStyleHandler().getPolyStyles().size(); i++) {
-					MyPolyStyle polyStyle = getKmlFactory().getPolyStyleHandler().getPolyStyles().get(i);
-					JLabel l = new JLabel(polyStyle.getMinPointCount() + "-" + polyStyle.getMaxPointCount());
+				List<MyPolyStyle> polyStyles = getKmlFactory().getPolyStyleHandler().getPolyStyles();
+				
+					for (int i = 0; i < polyStyles.size(); i++) {
+						MyPolyStyle polyStyle = polyStyles.get(i);
+						JLabel l = new JLabel(polyStyle.getMinPointCount() + "-" + polyStyle.getMaxPointCount());
 
-					JPanel p = new JPanel();
-					p.setBackground(Color.RED);
-					int count = getKmlFactory().getPolyStyleHandler().getPolyStyles().size();
-					p.setPreferredSize(new Dimension((int) Math.max(600 / count, 30), (int) Math.max(400 / count, 30)));
+						JPanel p = new JPanel();
+						p.setBackground(polyStyle.getColorForTxt());
+						int count = polyStyles.size();
+						p.setPreferredSize(
+								new Dimension((int) Math.max(600 / count, 30), (int) Math.max(400 / count, 30)));
 
-					this.labels.add(l);
-					this.panels.add(p);
-					this.add(l);
-					this.add(p);
+						this.labels.add(l);
+						this.panels.add(p);
+						this.add(l);
+						this.add(p);
 
-					final int index = i;
-					p.addMouseListener(new MyMouseListener() {
-						@Override
-						public void mouseIsClicked(MouseEvent evt) {
-							selectedPanel = index;
-						}
-					});
+						final int index = i;
+						p.addMouseListener(new MyMouseListener() {
+							@Override
+							public void mouseIsClicked(MouseEvent evt) {
+								selectedPanel = index;
+								chooser.setColor(polyStyles.get(selectedPanel).getColorForTxt());
+							}
+						});
 
-					saveThisColorSchemeBtn.addActionListener(x -> {
-						saveColorSchemeFile();
-					});
-					this.add(saveThisColorSchemeBtn);
-
-				}
+						saveThisColorSchemeBtn.addActionListener(x -> {
+							saveColorSchemeFile();
+						});
+						this.add(saveThisColorSchemeBtn);
+					}
 			}
-
+			
 			private void saveColorSchemeFile() {
 				List<String> lines = new ArrayList<>();
 				for (int i = 0; i < getKmlFactory().getPolyStyleHandler().getPolyStyles().size(); i++) {
@@ -308,13 +301,6 @@ public class GuiView extends View {
 
 				getKmlFactory().getPolyStyleHandler().getPolyStyles().get(selectedPanel)
 						.setColorForTxt(chooser.getColor());
-
-				for (int i = 0; i < getKmlFactory().getPolyStyleHandler().getPolyStyles().size(); i++) {
-					MyPolyStyle polyStyle = getKmlFactory().getPolyStyleHandler().getPolyStyles().get(i);
-					System.out.println(polyStyle.getColor());
-				}
-				System.out.println();
-
 			}
 		}
 		;
@@ -333,15 +319,15 @@ public class GuiView extends View {
 			@Override
 			public void componentShown(ComponentEvent e) {
 			}
-			
+
 			@Override
 			public void componentResized(ComponentEvent e) {
 			}
-			
+
 			@Override
 			public void componentMoved(ComponentEvent e) {
 			}
-			
+
 			@Override
 			public void componentHidden(ComponentEvent e) {
 				buttonLock.unlock();

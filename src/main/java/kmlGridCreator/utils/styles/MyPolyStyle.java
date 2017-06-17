@@ -19,11 +19,11 @@ public final class MyPolyStyle extends PolyStyle {
 		this.colorForKml = ColorUtils.convertColorToKMLColorString(c);
 	}
 
-	public boolean rangeCoveredByThisPolyStyle(int minCount, int maxCount) {
+	boolean rangeCoveredByThisPolyStyle(int minCount, int maxCount) {
 		return (minCount >= minPointCount && minCount <= maxPointCount) || (maxCount >= minPointCount && maxCount <= maxPointCount);
 	}
 
-	public boolean countCoveredByThisPolyStyle(int pointCount) {
+	boolean countCoveredByThisPolyStyle(int pointCount) {
 		return (pointCount >= minPointCount && pointCount <= maxPointCount);
 	}
 
@@ -31,10 +31,6 @@ public final class MyPolyStyle extends PolyStyle {
 	public String getColor() {
 		return this.colorForKml;
 	}
-
-//	public void setColor(String color) {
-//		this.color = color;
-//	}
 
 	public int getMinPointCount() {
 		return this.minPointCount;
@@ -52,6 +48,10 @@ public final class MyPolyStyle extends PolyStyle {
 		return "#"+this.getId();
 	}
 	
+	public Color getColorForTxt(){
+		return this.colorForTxt;
+	}
+	
 	public String getPolyStyleStringForTxt(){
 		String s = "";
 		s+=StringUtils.toFixedLength3(""+minPointCount)+" ";
@@ -66,6 +66,5 @@ public final class MyPolyStyle extends PolyStyle {
 	public void setColorForTxt(Color c) {
 		this.colorForTxt = c;
 		colorForKml = ColorUtils.convertColorToKMLColorString(c);
-		
 	}
 }

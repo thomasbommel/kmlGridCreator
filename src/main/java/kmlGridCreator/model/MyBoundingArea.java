@@ -14,7 +14,7 @@ public class MyBoundingArea extends BoundingArea {
 	private final List<Point> points;
 	private final String id;
 
-	public MyBoundingArea(Point northEast, Point southWest, String id) {
+	MyBoundingArea(Point northEast, Point southWest, String id) {
 		super(northEast, southWest);
 		this.points = Collections.synchronizedList(new ArrayList<>());
 		this.id = id;
@@ -24,7 +24,7 @@ public class MyBoundingArea extends BoundingArea {
 		return this.id;
 	}
 
-	public boolean tryToAddPoint(Point p) {
+	boolean tryToAddPoint(Point p) {
 		if (this.isContainedWithin(p)) {
 			points.add(p);
 			return true;

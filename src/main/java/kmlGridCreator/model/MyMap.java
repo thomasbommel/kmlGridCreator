@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.Point;
@@ -66,13 +65,9 @@ public class MyMap {
 		return areas;
 	}
 
-	public void addBoundingArea(MyBoundingArea area) {
-		this.boundingAreas.add(area);
-	}
+	
 
 	public void addPointsToTheAreas() {
-		long starttime = System.currentTimeMillis();
-
 		view.printToViewConsole("--- " + view.formatForConsole(points.size()) + " Punkte werden hinzugefügt. ---");
 		final int pointsSize = points.size();
 

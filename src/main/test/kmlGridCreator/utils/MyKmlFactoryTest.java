@@ -9,7 +9,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.peertopark.java.geocalc.DegreeCoordinate;
-import com.peertopark.java.geocalc.Point;
 
 import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MyPoint;

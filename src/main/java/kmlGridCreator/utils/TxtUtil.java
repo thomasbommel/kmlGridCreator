@@ -47,7 +47,7 @@ public class TxtUtil {
 	}
 
 	private static boolean isValidLine(String line) {
-		if (line.contains("Fehler")) {
+		if (line.contains("Fehler") || line.contains("Error")) {
 			// System.out.println("Error in line content:\n" + line);
 			return false;
 		} else {

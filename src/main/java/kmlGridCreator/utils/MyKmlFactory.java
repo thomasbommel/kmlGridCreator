@@ -38,7 +38,7 @@ public class MyKmlFactory {
 		createPolyStyles();
 	}
 
-	
+
 	
 	
 	private void createPolyStyles() throws OverlappingPolyStylesException {
@@ -51,7 +51,7 @@ public class MyKmlFactory {
 					int min = Integer.parseInt(x.substring(0, 3));
 					int max = Integer.parseInt(x.substring(4, 7));
 					String color = x.substring(8, 23);
-					 System.out.println(color);
+					//System.out.println(color);
 
 					int redInDec = Integer.parseInt(color.substring(0, 3));
 					int greenInDec = Integer.parseInt(color.substring(4, 7));
@@ -69,10 +69,7 @@ public class MyKmlFactory {
 			});
 		} catch (IOException e) {
 			System.out.println("default points used because colors.txt was missing in kmlGridCreator folder");
-			polyStyleHandler.add(new MyPolyStyle(0, 10, Color.white));
-			polyStyleHandler.add(new MyPolyStyle(11, 20,Color.yellow));
-			polyStyleHandler.add(new MyPolyStyle(21, 30, Color.orange));
-			polyStyleHandler.add(new MyPolyStyle(31, 100,Color.red));
+			polyStyleHandler.addDefaultPolyStyles();
 		}
 
 		
@@ -104,8 +101,6 @@ public class MyKmlFactory {
 	public void saveKmlFile(File outputFile) {
 		try {
 			kml.marshal(outputFile);
-			// System.out.println("kml " + outputFile.getAbsolutePath() + "
-			// saved");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

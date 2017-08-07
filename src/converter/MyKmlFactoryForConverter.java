@@ -1,4 +1,4 @@
-package main.java.kmlGridCreator.utils;
+package converter;
 
 import java.awt.Color;
 import java.io.File;
@@ -12,42 +12,33 @@ import java.util.List;
 import com.peertopark.java.geocalc.Point;
 
 import de.micromata.opengis.kml.v_2_2_0.Document;
-import de.micromata.opengis.kml.v_2_2_0.Icon;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.LineStyle;
 import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
-import de.micromata.opengis.kml.v_2_2_0.Style;
 import main.java.kmlGridCreator.exceptions.NoPolyStyleCoveringThisPointCountException;
 import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MyBoundingArea;
-import main.java.kmlGridCreator.model.MyPoint;
 import main.java.kmlGridCreator.model.Unused;
 import main.java.kmlGridCreator.utils.styles.MyPolyStyle;
 import main.java.kmlGridCreator.utils.styles.PolyStyleHandler;
 
-public class MyKmlFactory {
+public class MyKmlFactoryForConverter {
 
 	private Kml kml;
 	private Document document;
 	private PolyStyleHandler polyStyleHandler;
 
-	public MyKmlFactory(String documentName) throws OverlappingPolyStylesException {
+	public MyKmlFactoryForConverter(String documentName) throws OverlappingPolyStylesException {
 		System.out.println("MyKmlFactory");
 		this.kml = new Kml();
 		this.document = this.kml.createAndSetDocument().withName(documentName);
 
 		this.polyStyleHandler = new PolyStyleHandler();
 		createPolyStyles();
-		createIconStyle();
 	}
 
 
-	private void createIconStyle(){
-		Icon icon = new Icon()
-			    .withHref("http://thomasbommel.bplaced.net/KMLGridCreator/point.png");
-			Style style = document.createAndAddStyle();
-			style.withId("iconStyle").createAndSetIconStyle().withScale(0.5).withIcon(icon); // set size and icon
-	}
+	
 	
 	private void createPolyStyles() throws OverlappingPolyStylesException {
 		try {
@@ -79,6 +70,8 @@ public class MyKmlFactory {
 			System.out.println("default points used because colors.txt was missing in kmlGridCreator folder");
 			polyStyleHandler.addDefaultPolyStyles();
 		}
+
+		
 	}
 
 	public  void createPolyStylesInDocument() {
@@ -91,29 +84,18 @@ public class MyKmlFactory {
 		});
 	}
 
-	public void addPointsToKmlWithPin(List<MyPoint> points) {
+	@Unused
+	public void addPointsToKml(List<MyPointForConverter> points) {
 		if (points == null) {
 			return;
 		}
+
 		for (int i = 0; i < points.size(); i++) {
-			Point kmlPoint = points.get(i);
-			document.createAndAddPlacemark().withDescription("latitude: "+ kmlPoint.getLatitude()+", longitude: "+ kmlPoint.getLongitude()).withOpen(Boolean.FALSE).createAndSetPoint()
+			MyPointForConverter kmlPoint = points.get(i);
+			document.createAndAddPlacemark().withName(kmlPoint.toString()).withOpen(Boolean.TRUE).createAndSetPoint()
 					.addToCoordinates(kmlPoint.getLongitude(), kmlPoint.getLatitude());
 		}
 	}
-	
-	public void addPointsToKmlWithIcon(List<MyPoint> points) {
-		if (points == null) {
-			return;
-		}
-		for (int i = 0; i < points.size(); i++) {
-			Point kmlPoint = points.get(i);
-			document.createAndAddPlacemark().withDescription("latitude: "+ kmlPoint.getLatitude()+", longitude: "+ kmlPoint.getLongitude()).withStyleUrl("#iconStyle").withOpen(Boolean.FALSE).createAndSetPoint()
-					.addToCoordinates(kmlPoint.getLongitude(), kmlPoint.getLatitude());
-		}
-	}
-	
-	
 
 	public void saveKmlFile(File outputFile) {
 		try {

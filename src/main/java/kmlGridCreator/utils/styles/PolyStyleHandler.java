@@ -30,10 +30,10 @@ public final class PolyStyleHandler {
 	}
 
 	public void addDefaultPolyStyles() throws OverlappingPolyStylesException {
-		add(new MyPolyStyle(0, 10, new Color(255, 255, 255, 200)));
-		add(new MyPolyStyle(11, 20, new Color(255, 255, 0, 200)));
-		add(new MyPolyStyle(21, 30, new Color(255, 200, 20, 200)));
-		add(new MyPolyStyle(31, 100, new Color(255, 0, 0, 200)));
+		add(new MyPolyStyle(0, 10, new Color(255, 255, 255, 100)));
+		add(new MyPolyStyle(11, 20, new Color(255, 255, 0, 100)));
+		add(new MyPolyStyle(21, 30, new Color(255, 200, 20, 100)));
+		add(new MyPolyStyle(31, 100, new Color(255, 0, 0, 100)));
 	}
 
 	public MyPolyStyle getPolyStyleForPointCount(int pointCount)

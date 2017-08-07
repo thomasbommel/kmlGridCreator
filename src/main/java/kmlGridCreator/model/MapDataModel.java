@@ -23,7 +23,6 @@ public class MapDataModel {
 	
 
 	public void startCreation() throws IOException, OverlappingPolyStylesException {
-		
 		kml.createPolyStylesInDocument();
 		view.printToViewConsole("Die Generierung des kml Files wurde gestartet.");
 
@@ -44,7 +43,11 @@ public class MapDataModel {
 				view.printToViewConsole(e.getMessage());
 			}
 			if(view.addPointsToKmlEnabled()){
-				kml.addPointsToKml(area.getPoints()); 
+				if(view.useIconsInsteadOfPinsForPointsInKML()){
+					kml.addPointsToKmlWithIcon(area.getPoints()); 
+				}else{
+					kml.addPointsToKmlWithPin(area.getPoints()); 
+				}
 			}
 		}
 		kml.saveKmlFile(fileToWriteTo);

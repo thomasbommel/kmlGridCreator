@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,10 +58,14 @@ class GuiView extends View {
 	private JFrame frame, colorChooserFrame;
 	private JPanel contentPane;
 	private GuiLogger log;
-	private Lock buttonLock = new ReentrantLock(); // this lock is needed
+	private Lock buttonLock = new ReentrantLock(); 	// this lock is needed
 													// because otherwise you can
 													// click a button during the
 													// generation
+
+	private boolean useIconsInsteadOfPinsForPointsInKML = false;
+
+	private static final String CURRENTLY_NOT_POSSIBLE = "derzeit nicht möglich";
 
 	GuiView(MainApplication app) throws OverlappingPolyStylesException {
 		super();
@@ -119,7 +122,7 @@ class GuiView extends View {
 
 		this.selectOutputFileBtn = new MyJButton(false, "Ausg. auswählen", "Ausg. auswählen",
 				"Mit diesem Button kann eine Datei, in die dann geschrieben wird, ausgewählt werden",
-				"derzeit nicht möglich");
+				CURRENTLY_NOT_POSSIBLE);
 		this.selectOutputFileBtn.addActionListener(a -> {
 			if (buttonLock.tryLock()) {
 				try {
@@ -147,7 +150,7 @@ class GuiView extends View {
 		this.contentPane.add(selectOutputFileBtn);
 
 		this.startCreationBtn = new MyJButton(false, "starte Generierung", "starte Generierung",
-				"startet die Berechnung der Punkte und speichert dann die .kml Datei", "derzeit nicht möglich");
+				"startet die Berechnung der Punkte und speichert dann die .kml Datei", CURRENTLY_NOT_POSSIBLE);
 		this.startCreationBtn.addActionListener(a -> {
 			MapDataModel model = this.getModel();
 			Thread thread = new Thread() {
@@ -159,7 +162,7 @@ class GuiView extends View {
 							log.info("---- ALLES FERTIG ----");
 						} catch (Exception e) {
 							e.printStackTrace();
-							log.error("Es ist ein Fehler aufgetreten\n"+e.getMessage());
+							log.error("Es ist ein Fehler aufgetreten\n" + e.getMessage());
 						} finally {
 							buttonLock.unlock();
 						}
@@ -175,13 +178,24 @@ class GuiView extends View {
 		this.addPointsToKMLChkBox
 				.setToolTipText("legt fest ob die Punkte der '.txt' Datei zu der '.kml' Datei hinzugefügt werden");
 		this.addPointsToKMLChkBox.setEnabled(false);
+
+		this.addPointsToKMLChkBox.addActionListener(x -> {
+			if(this.addPointsToKMLChkBox.isSelected()){
+				int useIconsInsteadOfPins = JOptionPane.showConfirmDialog(frame, "Icons verwenden?", null,
+						JOptionPane.YES_NO_OPTION);
+				if (useIconsInsteadOfPins == JOptionPane.YES_OPTION) {
+						this.useIconsInsteadOfPinsForPointsInKML = true;
+				}
+			}
+		});
+
 		this.contentPane.add(addPointsToKMLChkBox);
 
 		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
 		this.contentPane.add(separator);
 
 		selectCSVOutputFileBtn = new MyJButton(false, "CSV Ausg. wählen", "CSV Ausg. wählen",
-				"legt den Pfad für die zu erstellende '.csv' Datei fest", "derzeit nicht möglich");
+				"legt den Pfad für die zu erstellende '.csv' Datei fest", CURRENTLY_NOT_POSSIBLE);
 		selectCSVOutputFileBtn.addActionListener(a -> {
 			if (buttonLock.tryLock()) {
 				try {
@@ -220,8 +234,8 @@ class GuiView extends View {
 
 		this.chooser = new JColorChooser();
 		for (AbstractColorChooserPanel panel : chooser.getChooserPanels()) {
-			if (!panel.getDisplayName().equals("HSL")) {
-				// chooser.removeChooserPanel(panel);
+			if (!panel.getDisplayName().equals("RGB")) {
+				chooser.removeChooserPanel(panel);
 			}
 		}
 
@@ -238,38 +252,35 @@ class GuiView extends View {
 				this.saveThisColorSchemeBtn = new JButton("save");
 
 				List<MyPolyStyle> polyStyles = getKmlFactory().getPolyStyleHandler().getPolyStyles();
-				
-					for (int i = 0; i < polyStyles.size(); i++) {
-						MyPolyStyle polyStyle = polyStyles.get(i);
-						JLabel l = new JLabel(polyStyle.getMinPointCount() + "-" + polyStyle.getMaxPointCount());
 
-						JPanel p = new JPanel();
-						p.setBackground(polyStyle.getColorForTxt());
-						int count = polyStyles.size();
-						p.setPreferredSize(
-								new Dimension((int) Math.max(600 / count, 30), (int) Math.max(400 / count, 30)));
+				for (int i = 0; i < polyStyles.size(); i++) {
+					MyPolyStyle polyStyle = polyStyles.get(i);
+					JLabel l = new JLabel(polyStyle.getMinPointCount() + "-" + polyStyle.getMaxPointCount());
 
-						this.labels.add(l);
-						this.panels.add(p);
-						this.add(l);
-						this.add(p);
+					JPanel p = new JPanel();
+					p.setBackground(polyStyle.getColorForTxt());
+					int count = polyStyles.size();
+					p.setPreferredSize(new Dimension((int) Math.max(600 / count, 30), (int) Math.max(400 / count, 30)));
 
-						final int index = i;
-						p.addMouseListener(new MyMouseListener() {
-							@Override
-							public void mouseIsClicked(MouseEvent evt) {
-								selectedPanel = index;
-								chooser.setColor(polyStyles.get(selectedPanel).getColorForTxt());
-							}
-						});
+					this.labels.add(l);
+					this.panels.add(p);
+					this.add(l);
+					this.add(p);
 
-						saveThisColorSchemeBtn.addActionListener(x -> {
-							saveColorSchemeFile();
-						});
-						this.add(saveThisColorSchemeBtn);
-					}
+					final int index = i;
+					p.addMouseListener(new MyMouseListener() {
+						@Override
+						public void mouseIsClicked(MouseEvent evt) {
+							selectedPanel = index;
+							chooser.setColor(polyStyles.get(selectedPanel).getColorForTxt());
+						}
+					});
+
+					saveThisColorSchemeBtn.addActionListener(x -> saveColorSchemeFile());
+					this.add(saveThisColorSchemeBtn);
+				}
 			}
-			
+
 			private void saveColorSchemeFile() {
 				List<String> lines = new ArrayList<>();
 				for (int i = 0; i < getKmlFactory().getPolyStyleHandler().getPolyStyles().size(); i++) {
@@ -278,16 +289,20 @@ class GuiView extends View {
 				}
 
 				try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("colors.txt")))) {
-					lines.forEach(x -> {
-						try {
-							bw.write(x);
-							bw.newLine();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+					lines.forEach(line -> {
+						appendLineTOBufferedWriter(line, bw);
 					});
 				} catch (FileNotFoundException ex) {
 					ex.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			private void appendLineTOBufferedWriter(String line, BufferedWriter bw) {
+				try {
+					bw.write(line);
+					bw.newLine();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -303,29 +318,29 @@ class GuiView extends View {
 						.setColorForTxt(chooser.getColor());
 			}
 		}
-		;
 		Preview prev = new Preview();
 		this.chooser.setPreviewPanel(prev);
-		// this.chooser.setSize(new Dimension(600, 600));
 		this.colorChooserFrame = new JFrame("Color chooser");
 		this.colorChooserFrame.getContentPane().setLayout(new FlowLayout());
 		this.colorChooserFrame.getContentPane().add(chooser);
 		this.colorChooserFrame.pack();
 		this.colorChooserFrame.setLocationRelativeTo(frame);
 		this.colorChooserFrame.setAlwaysOnTop(true);
-		// this.colorChooserFrame.setVisible(true);
 		this.chooser.getSelectionModel().addChangeListener(prev);
 		this.colorChooserFrame.addComponentListener(new ComponentListener() {
 			@Override
 			public void componentShown(ComponentEvent e) {
+				// do nothing
 			}
 
 			@Override
 			public void componentResized(ComponentEvent e) {
+				// do nothing
 			}
 
 			@Override
 			public void componentMoved(ComponentEvent e) {
+				// do nothing
 			}
 
 			@Override
@@ -340,21 +355,21 @@ class GuiView extends View {
 		String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory()
 				.getAbsolutePath();
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setPreferredSize(new Dimension(1000, 600));
+		JFileChooser inputFileChooser = new JFileChooser();
+		inputFileChooser.setPreferredSize(new Dimension(1000, 600));
 		FileNameExtensionFilter fileExtensionFilter = new FileNameExtensionFilter("text files (*.txt)", "txt");
-		chooser.setFileFilter(fileExtensionFilter);
-		chooser.setCurrentDirectory(new java.io.File(desktopPath));
-		chooser.setDialogTitle("Eingabedatei auswählen.");
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
+		inputFileChooser.setFileFilter(fileExtensionFilter);
+		inputFileChooser.setCurrentDirectory(new java.io.File(desktopPath));
+		inputFileChooser.setDialogTitle("Eingabedatei auswählen.");
+		inputFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		inputFileChooser.setAcceptAllFileFilterUsed(false);
 
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			if (!chooser.getSelectedFile().getName().toLowerCase().endsWith(".txt")
-					|| !Files.exists(Paths.get(chooser.getSelectedFile().getAbsolutePath()))) {
+		if (inputFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (!inputFileChooser.getSelectedFile().getName().toLowerCase().endsWith(".txt")
+					|| !Paths.get(inputFileChooser.getSelectedFile().getAbsolutePath()).toFile().exists()) {
 				JOptionPane.showMessageDialog(frame, "Datei existiert nicht oder ist ein ungültiges Format");
 			} else {
-				return chooser.getSelectedFile();
+				return inputFileChooser.getSelectedFile();
 			}
 		}
 		return null;
@@ -365,24 +380,24 @@ class GuiView extends View {
 		String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory()
 				.getAbsolutePath();
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setPreferredSize(new Dimension(1000, 600));
+		JFileChooser outputFileChooser = new JFileChooser();
+		outputFileChooser.setPreferredSize(new Dimension(1000, 600));
 		FileNameExtensionFilter fileExtensionFilter = extensionFilter;
-		chooser.setFileFilter(fileExtensionFilter);
-		chooser.setCurrentDirectory(new java.io.File(desktopPath));
-		chooser.setDialogTitle("Ausgabedatei auswählen.");
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
+		outputFileChooser.setFileFilter(fileExtensionFilter);
+		outputFileChooser.setCurrentDirectory(new java.io.File(desktopPath));
+		outputFileChooser.setDialogTitle("Ausgabedatei auswählen.");
+		outputFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		outputFileChooser.setAcceptAllFileFilterUsed(false);
 
-		chooser.setCurrentDirectory(new java.io.File(desktopPath));
-		int retrival = chooser.showSaveDialog(null);
+		outputFileChooser.setCurrentDirectory(new java.io.File(desktopPath));
+		int retrival = outputFileChooser.showSaveDialog(null);
 		if (retrival == JFileChooser.APPROVE_OPTION) {
-			File selected = chooser.getSelectedFile();
+			File selected = outputFileChooser.getSelectedFile();
 			if (!selected.getAbsolutePath().contains("." + extensionFilter.getExtensions()[0])) {
 				selected = new File(selected.getAbsolutePath() + "." + extensionFilter.getExtensions()[0]);
 			}
 			if (fileExtensionFilter.accept(selected)) {
-				if (Files.exists(Paths.get(selected.getAbsolutePath()))) {
+				if (Paths.get(selected.getAbsolutePath()).toFile().exists()) {
 					int overwrite = JOptionPane.showConfirmDialog(frame, "überschreiben?", null,
 							JOptionPane.YES_NO_OPTION);
 					if (overwrite == JOptionPane.NO_OPTION) {
@@ -413,6 +428,11 @@ class GuiView extends View {
 	@Override
 	public boolean addPointsToKmlEnabled() {
 		return this.addPointsToKMLChkBox.isSelected();
+	}
+
+	@Override
+	public boolean useIconsInsteadOfPinsForPointsInKML() {
+		return this.useIconsInsteadOfPinsForPointsInKML;
 	}
 
 	// =====================================================================

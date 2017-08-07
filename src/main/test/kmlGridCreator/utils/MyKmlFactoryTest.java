@@ -20,13 +20,13 @@ public class MyKmlFactoryTest {
 	@Test
 	public void testAddPointsToKmlNullValue() throws OverlappingPolyStylesException {
 		MyKmlFactory kml = new MyKmlFactory("testKmlDocument");
-		kml.addPointsToKml(null);
+		kml.addPointsToKmlWithPin(null);
 	}
 
 	@Test
 	public void testAddPointsToKmlNoPoints() throws FileNotFoundException, OverlappingPolyStylesException {
 		MyKmlFactory kml = new MyKmlFactory("testKmlDocument");
-		kml.addPointsToKml(new ArrayList<>());
+		kml.addPointsToKmlWithPin(new ArrayList<>());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		kml.getKml().marshal(out);
 		List<String> generatedPoints = TestUtil.extractPointFromKml(out.toString());
@@ -41,7 +41,7 @@ public class MyKmlFactoryTest {
 		for (int i = 0; i < 50000; i++) {
 			points.add(new MyPoint(new DegreeCoordinate(Math.random() * 10000), new DegreeCoordinate(Math.random() * 10000)));
 		}
-		kml.addPointsToKml(points);
+		kml.addPointsToKmlWithPin(points);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		kml.getKml().marshal(out);

@@ -7,6 +7,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 import main.java.kmlGridCreator.model.MapDataModel;
 
+/**
+ * this View is only used for testing
+ * @author Sallaberger
+ *
+ */
 public class TestView extends View{
 
 	public boolean addPointsToKml;

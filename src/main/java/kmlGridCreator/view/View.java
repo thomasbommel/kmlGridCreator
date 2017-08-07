@@ -55,6 +55,10 @@ public abstract class View {
 		return formatter;
 	}
 
+	public boolean useIconsInsteadOfPinsForPointsInKML() {
+		return false;
+	}
+
 
 
 }

@@ -1,5 +1,8 @@
 package main.java.kmlGridCreator.view;
 
+import java.util.Arrays;
+import java.util.List;
+
 import main.java.kmlGridCreator.exceptions.OverlappingPolyStylesException;
 
 class MainApplication {
@@ -18,5 +21,4 @@ class MainApplication {
 		MainApplication app = new MainApplication("KML GENERATOR");
 		new GuiView(app);
 	}
-
 }

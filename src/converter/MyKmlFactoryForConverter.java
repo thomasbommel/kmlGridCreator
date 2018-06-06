@@ -92,8 +92,10 @@ public class MyKmlFactoryForConverter {
 
 		for (int i = 0; i < points.size(); i++) {
 			MyPointForConverter kmlPoint = points.get(i);
-			document.createAndAddPlacemark().withName(kmlPoint.toString()).withOpen(Boolean.TRUE).createAndSetPoint()
+			document.createAndAddPlacemark().withName("#"+i+", "+kmlPoint.toString()).withOpen(Boolean.TRUE).createAndSetPoint()
 					.addToCoordinates(kmlPoint.getLongitude(), kmlPoint.getLatitude());
+//			document.createAndAddPlacemark().withName(kmlPoint.toString()).withOpen(Boolean.TRUE).createAndSetPoint()
+//			.addToCoordinates(kmlPoint.getLongitude(), kmlPoint.getLatitude());
 		}
 	}
 

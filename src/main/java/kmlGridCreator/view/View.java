@@ -59,6 +59,10 @@ public abstract class View {
 		return false;
 	}
 
+	public int getSelectedGridSizeInMeter() {
+		return 1000;
+	}
+
 
 
 }

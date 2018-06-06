@@ -16,9 +16,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.peertopark.java.geocalc.EarthCalc;
 import com.peertopark.java.geocalc.GPSCoordinate;
 import com.peertopark.java.geocalc.Point;
 
+import converter.MyPointForConverter;
 import main.java.kmlGridCreator.model.MyPoint;
 
 public class TxtUtil {
@@ -30,35 +32,79 @@ public class TxtUtil {
 		Path path = Paths.get(file.getAbsolutePath());
 		List<String> lines = Files.readAllLines(path, Charset.forName("UTF-8"));
 		// System.out.println(lines);
-		lines = lines.stream().filter(l -> isValidLine(l)).map(line -> line.substring(18, line.length())).collect(Collectors.toList());
+		lines = lines.stream().filter(l -> isValidLine(l)).map(line -> line.substring(18, line.length()))
+				.collect(Collectors.toList());
 		List<MyPoint> allPoints = new ArrayList<>();
-		lines.forEach(line -> {
-			String northDegree = line.substring(0, 3);
-			String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
-			// System.out.println(northDegree+" "+northMinutes);
-			String eastDegree = line.substring(10, 13);
-			String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
-			// System.out.println(eastDegree+" "+eastMinutes);
-			GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
-			GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
-			allPoints.add(new MyPoint(north, east));
-		});
+
+		double sum = 0;
+		double count = 0;
+
+		MyPoint old = null;
+
+		for (int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
+			try {
+				String northDegree = line.substring(0, 3);
+				String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
+				// System.out.println(northDegree+" "+northMinutes);
+				String eastDegree = line.substring(10, 13);
+				String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
+				// System.out.println(eastDegree+" "+eastMinutes);
+				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree),
+						Double.parseDouble(northMinutes));
+				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
+				
+
+				
+				double dis = 0;
+				if (old != null) {
+					 dis = EarthCalc.getDistance(old, new MyPoint(north, east));
+					if (dis >= 20 && dis <= 500) {
+						count++;
+						sum += dis;
+						System.out.println("sum " + sum + " count " + count);
+						System.out.println("Abstand:  " + dis);
+						System.out.println("Durchschn: " + sum / Math.max(count, 1) + " \n");
+					}else{
+						old=null;
+					}
+
+				}
+				allPoints.add(new MyPointForConverter(north, east,""+ dis));
+				old = new MyPointForConverter(north, east, eastMinutes);
+
+			} catch (Exception e) {
+				System.out.println("Error adding point for line:\n" + line+" "+e);
+			}
+		}
+
+		// lines.forEach(line -> {
+		//
+		// });
 		return allPoints;
 	}
 
 	private static boolean isValidLine(String line) {
 		if (line.contains("Fehler") || line.contains("Error")) {
-			// System.out.println("Error in line content:\n" + line);
+			System.out.println("Error in line content:\n" + line);
 			return false;
 		} else {
 			return true;
 		}
+		// if (line.length() != 37 || line.contains("Fehler") ||
+		// line.contains("Error")) {
+		// System.out.println("Error in line content:\n" + line);
+		// return false;
+		// } else {
+		// return true;
+		// }
 	}
 
 	@Deprecated
 	public static final List<Point> getTestPoints() {
 		try {
-			String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
+			String desktopPath = javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory()
+					.getAbsolutePath();
 
 			Path path = Paths.get(selectFilePath(desktopPath));
 			// Path path = Paths.get(desktopPath + "/test_input.txt");
@@ -79,7 +125,8 @@ public class TxtUtil {
 				String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
 				// System.out.println(eastDegree+" "+eastMinutes);
 
-				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree), Double.parseDouble(northMinutes));
+				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree),
+						Double.parseDouble(northMinutes));
 				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
 
 				allPoints.add(new Point(north, east));
@@ -109,23 +156,25 @@ public class TxtUtil {
 				System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
 				System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
 				if (chooser.getSelectedFile().getName().toLowerCase().endsWith(".txt")) {
-					if (JOptionPane.showConfirmDialog(null, "willst du wirklich " + chooser.getSelectedFile().getName() + " als Pfad auswählen?", "",
+					if (JOptionPane.showConfirmDialog(null,
+							"willst du wirklich " + chooser.getSelectedFile().getName() + " als Pfad auswählen?", "",
 							JOptionPane.CANCEL_OPTION) == 0) {
 						path = chooser.getSelectedFile().getAbsolutePath();
 					}
 				}
 			} else {
 				System.out.println("No Selection ");
-				if (JOptionPane.showConfirmDialog(null, "willst du wirklich abbrechen", "", JOptionPane.CANCEL_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(null, "willst du wirklich abbrechen", "",
+						JOptionPane.CANCEL_OPTION) == 0) {
 					System.exit(0);
 				}
 			}
 		}
 		return path;
 	}
-	
-	public static List<String> getLinesFromTextFile(String path) throws IOException{
-		return Files.readAllLines(Paths.get(path),Charset.forName("UTF-8"));
+
+	public static List<String> getLinesFromTextFile(String path) throws IOException {
+		return Files.readAllLines(Paths.get(path), Charset.forName("UTF-8"));
 	}
 
 }

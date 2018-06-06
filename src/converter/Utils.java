@@ -48,6 +48,7 @@ public class Utils {
 		return dateFormat.format(date);
 	}
 
+	@Deprecated
 	public static void addToTxt(String filename, String text){
 		try (FileWriter fw = new FileWriter(desktopPath+filename+".txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);

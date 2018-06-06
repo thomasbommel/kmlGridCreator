@@ -26,13 +26,13 @@ public class MapDataModel {
 		kml.createPolyStylesInDocument();
 		view.printToViewConsole("Die Generierung des kml Files wurde gestartet.");
 
-		map = new MyMap(TxtUtil.getPointsFromTxt(fileToReadFrom), 1000, view);
+		map = new MyMap(TxtUtil.getPointsFromTxt(fileToReadFrom), view.getSelectedGridSizeInMeter(), view);
 		view.printToViewConsole("--- PUNKTE WERDEN ZUGEORDNET");
 		map.addPointsToTheAreas();
 		view.printToViewConsole(
 				"--- Die Zuordnung ist beendet ---");
 
-		view.printToViewConsole(" Datei " + fileToWriteTo.getName() + " wird erstellt.");
+		view.printToViewConsole("Datei " + fileToWriteTo.getName() + " wird erstellt...");
 		for (MyBoundingArea area : map.getBoundingAreas()) {
 			try {
 				kml.addBoundingArea(area);

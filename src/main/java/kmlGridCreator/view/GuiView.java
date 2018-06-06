@@ -58,7 +58,7 @@ class GuiView extends View {
 	private JFrame frame, colorChooserFrame;
 	private JPanel contentPane;
 	private GuiLogger log;
-	private Lock buttonLock = new ReentrantLock(); 	// this lock is needed
+	private Lock buttonLock = new ReentrantLock(); // this lock is needed
 													// because otherwise you can
 													// click a button during the
 													// generation
@@ -66,6 +66,8 @@ class GuiView extends View {
 	private boolean useIconsInsteadOfPinsForPointsInKML = false;
 
 	private static final String CURRENTLY_NOT_POSSIBLE = "derzeit nicht möglich";
+
+	private int selectedGridSizeInMeter = 1000;
 
 	GuiView(MainApplication app) throws OverlappingPolyStylesException {
 		super();
@@ -94,6 +96,21 @@ class GuiView extends View {
 		}
 	}
 
+	
+	private Integer selectGridSize() throws NumberFormatException{
+		String gridSizeString = JOptionPane.showInputDialog("Rastergröße in Meter", 1000);
+		
+		if(gridSizeString== null){
+			return null;
+		}else{
+			return Integer.parseInt(gridSizeString);
+		}
+	}
+	
+	
+	
+	
+	
 	private void initialiseFrame() {
 		this.contentPane = (JPanel) this.frame.getContentPane();
 		this.contentPane.setLayout(new FlowLayout());
@@ -158,14 +175,25 @@ class GuiView extends View {
 				public void run() {
 					if (buttonLock.tryLock()) {
 						try {
-							model.startCreation();
-							log.info("---- ALLES FERTIG ----");
-						} catch (Exception e) {
-							e.printStackTrace();
-							log.error("Es ist ein Fehler aufgetreten\n" + e.getMessage());
-						} finally {
-							buttonLock.unlock();
+							try {
+								Integer gridSize = selectGridSize();
+								if(gridSize!=null){
+									selectedGridSizeInMeter = gridSize;
+									model.startCreation();
+									log.info("---- ABGESCHLOSSEN ----");
+								}else{
+									log.info("Generierung abgebrochen");
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+								log.error("Es ist ein Fehler aufgetreten\n" + e.getMessage());
+							} finally {
+								buttonLock.unlock();
+							}
+						} catch (NumberFormatException nfe) {
+							log.info("Es muss eine Ganzzahl eingegeben werden.");
 						}
+
 					}
 				}
 			};
@@ -180,11 +208,14 @@ class GuiView extends View {
 		this.addPointsToKMLChkBox.setEnabled(false);
 
 		this.addPointsToKMLChkBox.addActionListener(x -> {
-			if(this.addPointsToKMLChkBox.isSelected()){
+			if (this.addPointsToKMLChkBox.isSelected()) {
 				int useIconsInsteadOfPins = JOptionPane.showConfirmDialog(frame, "Icons verwenden?", null,
 						JOptionPane.YES_NO_OPTION);
 				if (useIconsInsteadOfPins == JOptionPane.YES_OPTION) {
-						this.useIconsInsteadOfPinsForPointsInKML = true;
+					this.useIconsInsteadOfPinsForPointsInKML = true;
+					log.info("es werden Icons für die Punkte verwendet");
+				} else {
+					log.info("es werden Pinnadeln für die Punkte verwendet");
 				}
 			}
 		});
@@ -433,6 +464,11 @@ class GuiView extends View {
 	@Override
 	public boolean useIconsInsteadOfPinsForPointsInKML() {
 		return this.useIconsInsteadOfPinsForPointsInKML;
+	}
+
+	@Override
+	public int getSelectedGridSizeInMeter() {
+		return selectedGridSizeInMeter;
 	}
 
 	// =====================================================================

@@ -22,8 +22,8 @@ public final class PolyStyleHandler {
 	public void add(MyPolyStyle polyStyle) throws OverlappingPolyStylesException {
 		if (polyStyles.stream().anyMatch(
 				x -> x.rangeCoveredByThisPolyStyle(polyStyle.getMinPointCount(), polyStyle.getMaxPointCount()))) {
-			throw new OverlappingPolyStylesException("the range [" + polyStyle.getMinPointCount() + ","
-					+ polyStyle.getMaxPointCount() + "] is already used by an other Polystyle");
+			throw new OverlappingPolyStylesException("der Bereich  [" + polyStyle.getMinPointCount() + ","
+					+ polyStyle.getMaxPointCount() + "] wird bereits von einem Style abgedeckt, bitte colors.txt anpassen");
 		} else {
 			this.polyStyles.add(polyStyle);
 		}
@@ -43,10 +43,10 @@ public final class PolyStyleHandler {
 
 		if (polyStylesCoveringThisPointCount.size() == 0) {
 			throw new NoPolyStyleCoveringThisPointCountException(
-					"there is no PolyStyle covering a pointcount of " + pointCount);
+					"es existiert kein Style für eine Punktanzahl von  " + pointCount+", bitte colors.txt anpassen");
 		} else if (polyStylesCoveringThisPointCount.size() > 1) {
 			throw new OverlappingPolyStylesException(
-					"there are more than one PolyStyle which cover a pointcount of " + pointCount);
+					"es existiert mehr als ein Style für eine Punktanzahl von " + pointCount+", bitte colors.txt anpassen");
 		} else {
 			return polyStylesCoveringThisPointCount.get(0);
 		}

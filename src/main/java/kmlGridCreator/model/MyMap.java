@@ -52,8 +52,8 @@ public class MyMap {
 		view.printToViewConsole("xSize: " + xSize);
 		view.printToViewConsole("ySize: " + ySize);
 
-		for (int yIndex = 0; yIndex < ySize; yIndex++) {// height
-			for (int xIndex = 0; xIndex < xSize; xIndex++) {// width
+		for (int yIndex = 0; yIndex < ySize+5; yIndex++) {// height
+			for (int xIndex = 0; xIndex < xSize+5; xIndex++) {// width
 				nwPointOfField = (EarthCalc.pointRadialDistance(nwPointOfField, 90, GRID_SIZE_IN_M));
 				sw = EarthCalc.pointRadialDistance(EarthCalc.pointRadialDistance(nwPointOfField, 270, GRID_SIZE_IN_M), 180, GRID_SIZE_IN_M);
 

@@ -32,6 +32,7 @@ import main.java.kmlGridCreator.model.MyPoint;
  * @author Sallaberger
  *
  */
+@Deprecated
 public class DataFormatConverter2 {
 
 	private static final String FILE_PATH = Paths.get("./").toAbsolutePath().normalize().toString() + "";

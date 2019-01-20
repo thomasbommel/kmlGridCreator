@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,29 +49,36 @@ public class DataFormatConverterForNewDevices {
 
 			List<String> convertedLines = new ArrayList<>();
 
-			points.stream().forEach(point -> {
+			for(int i=0;i<points.size();i++){
+				Point point = points.get(i);
+				
 				try {
 					//
-
 					String fullLat = String.format("%03d", (int) point.getLatitude());
 					String fullLng = String.format("%03d", (int) point.getLongitude());
 					int fulllat = (int) point.getLatitude();
 					int fulllng = (int) point.getLongitude();
 					double lat = point.getLatitude() - fulllat;
 					lat = lat * 0.6;
-					String latDegree = Double.toString(lat).replace("0.", "").substring(0, 5);
+					
+					DecimalFormat df= new DecimalFormat("0.000000000");
+					
+					String formattetLat = df.format(lat);
+					String latDegree = formattetLat.replace("0.", "").replace("0,", "").substring(0, 5);
 
 					double lng = point.getLongitude() - fulllng;
 					lng = lng * 0.6;
-					String lngDegree = Double.toString(lng).replace("0.", "").substring(0, 5);
+					
+					String formattetLng = df.format(lng);
+					String lngDegree =formattetLng.replace("0.", "").replace("0,", "").substring(0, 5);
 
 					convertedLines.add(
 							point.toString() + "" + fullLat + "" + latDegree + "N," + fullLng + "" + lngDegree + "E");
 				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
-			});
-
+			}
+			
 			String time = Long.toString(System.currentTimeMillis());
 			JOptionPane.showMessageDialog(null, "started conversion, of " + points.size() + " lines");
 
@@ -90,7 +98,7 @@ public class DataFormatConverterForNewDevices {
 	}
 
 	private static List<String> getLinesFromFile(Path path) throws IOException {
-		return Files.readAllLines(path, Charset.forName("UTF-8"));
+		return Files.readAllLines(path, Charset.forName("ISO-8859-1"));
 	}
 
 	private static List<MyPointForConverter> getPointsFromLines(List<String> lines) {
@@ -108,10 +116,12 @@ public class DataFormatConverterForNewDevices {
 				MyPointForConverter point = getPointFromline(lines.get(i));
 				if (old != null) {
 					double dist = EarthCalc.getHarvesineDistance(point, old);
-					if (dist > 2 && dist < 500) {
+					if (dist > 5 && dist < 500) {
 						sum += dist;
 						count++;
-						System.out.println(Utils.numberToString(i, 8, 0)+ " distance "+Utils.numberToString(dist, 8, 3));
+//						System.out.println(
+//								Utils.numberToString(i, 8, 0) + " distance " + Utils.numberToString(dist, 8, 3));
+						System.out.println(Utils.numberToString(dist, 8, 3));
 					}
 				}
 				old = point;
@@ -121,7 +131,7 @@ public class DataFormatConverterForNewDevices {
 			}
 
 		}
-		System.out.println("average distance "+Utils.numberToString(sum / count,10,3));
+		System.out.println("average distance " + Utils.numberToString(sum / count, 10, 3));
 		System.out.println("count " + count);
 
 		return points;
@@ -129,10 +139,10 @@ public class DataFormatConverterForNewDevices {
 
 	private static MyPointForConverter getPointFromline(String line) throws Exception {
 
-		if (line.length() <40 || line.length() >60) {
+		if (line.length() < 40 || line.length() > 60) {
 			System.out.println("line length incorrect: " + line + "; " + line.length());
 		} else {
-			System.out.println("line: "+line);
+			//System.out.println("line: " + line);
 			String date = line.substring(0, 18);
 
 			String latDegree = line.split(",")[2];

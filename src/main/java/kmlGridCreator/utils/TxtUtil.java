@@ -21,11 +21,90 @@ import com.peertopark.java.geocalc.GPSCoordinate;
 import com.peertopark.java.geocalc.Point;
 
 import converter.MyPointForConverter;
+import converter.MyPointForConverterWithDateAndDistance;
 import main.java.kmlGridCreator.model.MyPoint;
 
 public class TxtUtil {
+	
+	public static List<String> errorLines = new ArrayList<>();
 
-	public static final List<MyPoint> getPointsFromTxt(File file) throws IOException {
+	public static final List<MyPointForConverterWithDateAndDistance> getPointsFromTxt(File file) throws IOException {
+		if (file == null) {
+			return Collections.emptyList();
+		}
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, Charset.forName("UTF-8"));
+		// System.out.println(lines);
+		lines = lines.stream().filter(l -> isValidLine(l))
+				.collect(Collectors.toList());
+		List<MyPointForConverterWithDateAndDistance> allPoints = new ArrayList<>();
+
+		double sum = 0;
+		double count = 0;
+
+		MyPoint old = null;
+
+		String northDegree = null;
+		String northMinutes= null;
+		String eastDegree= null;
+		String eastMinutes= null;
+		for (int i = 0; i < lines.size(); i++) {
+			String completeLine =  lines.get(i);
+			String line = completeLine.substring(18, completeLine.length());
+			try {
+				northDegree = line.substring(0, 3);
+				northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
+//				System.out.println(northDegree + " " + northMinutes);
+				eastDegree = line.substring(10, 13);
+				eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
+//				System.out.println(eastDegree + " " + eastMinutes + "\n");
+				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree),
+						Double.parseDouble(northMinutes));
+				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
+
+				double dis = 0;
+				if (old != null) {
+					dis = EarthCalc.getDistance(old, new MyPoint(north, east));
+//					if (dis >= 0 && dis <= 5000) {
+//						count++;
+//						sum += dis;
+						// System.out.println("sum " + sum + " count " + count);
+						// System.out.println("Abstand: " + dis);
+						// System.out.println("Durchschn: " + sum /
+						// Math.max(count, 1) + " \n");
+//					} else {
+//						old = null;
+//					}
+				}
+				
+				String hour = completeLine.substring(0,5);
+				String date = completeLine.substring(9,17);
+//				System.out.println("hour: "+hour+", date: "+date+".");
+				
+				if(i != 0){
+					allPoints.add(new MyPointForConverterWithDateAndDistance(north, east,dis,date,hour));
+				}else{
+					allPoints.add(new MyPointForConverterWithDateAndDistance(north, east,null,date,hour));
+				}
+				
+			
+				old = new MyPointForConverter(north, east, eastMinutes);
+
+			} catch (Exception e) {
+				System.out.println(i + " Error adding point for line:\n" + line+"\n northDegree:"+northDegree+" northMinutes:"+northMinutes+" eastDegree:"+eastDegree+" eastMinutes:"+eastMinutes);
+				System.out.println();
+				errorLines.add(completeLine);
+			}
+		}
+
+		// lines.forEach(line -> {
+		//
+		// });
+		return allPoints;
+	}
+
+	
+	public static final List<MyPoint> getPointsFromTxt2(File file) throws IOException {
 		if (file == null) {
 			return Collections.emptyList();
 		}
@@ -41,40 +120,44 @@ public class TxtUtil {
 
 		MyPoint old = null;
 
+		String northDegree = null;
+		String northMinutes= null;
+		String eastDegree= null;
+		String eastMinutes= null;
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i);
 			try {
-				String northDegree = line.substring(0, 3);
-				String northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
-				// System.out.println(northDegree+" "+northMinutes);
-				String eastDegree = line.substring(10, 13);
-				String eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
-				// System.out.println(eastDegree+" "+eastMinutes);
+				northDegree = line.substring(0, 3);
+				northMinutes = line.substring(3, 5) + "." + line.substring(5, 8);
+//				System.out.println(northDegree + " " + northMinutes);
+				eastDegree = line.substring(10, 13);
+				eastMinutes = line.substring(13, 15) + "." + line.substring(15, 18);
+//				System.out.println(eastDegree + " " + eastMinutes + "\n");
 				GPSCoordinate north = new GPSCoordinate(Double.parseDouble(northDegree),
 						Double.parseDouble(northMinutes));
 				GPSCoordinate east = new GPSCoordinate(Double.parseDouble(eastDegree), Double.parseDouble(eastMinutes));
-				
 
-				
 				double dis = 0;
 				if (old != null) {
-					 dis = EarthCalc.getDistance(old, new MyPoint(north, east));
-					if (dis >= 20 && dis <= 500) {
-						count++;
-						sum += dis;
-						System.out.println("sum " + sum + " count " + count);
-						System.out.println("Abstand:  " + dis);
-						System.out.println("Durchschn: " + sum / Math.max(count, 1) + " \n");
-					}else{
-						old=null;
-					}
+					dis = EarthCalc.getDistance(old, new MyPoint(north, east));
+//					if (dis >= 0 && dis <= 5000) {
+//						count++;
+//						sum += dis;
+						// System.out.println("sum " + sum + " count " + count);
+						// System.out.println("Abstand: " + dis);
+						// System.out.println("Durchschn: " + sum /
+						// Math.max(count, 1) + " \n");
+//					} else {
+//						old = null;
+//					}
 
 				}
-				allPoints.add(new MyPointForConverter(north, east,""+ dis));
+				allPoints.add(new MyPointForConverter(north, east, " " ));
 				old = new MyPointForConverter(north, east, eastMinutes);
 
 			} catch (Exception e) {
-				System.out.println("Error adding point for line:\n" + line+" "+e);
+				System.out.println(i + " Error adding point for line:\n" + line+"\n northDegree:"+northDegree+" northMinutes:"+northMinutes+" eastDegree:"+eastDegree+" eastMinutes:"+eastMinutes);
+				System.out.println();
 			}
 		}
 
@@ -83,7 +166,7 @@ public class TxtUtil {
 		// });
 		return allPoints;
 	}
-
+	
 	private static boolean isValidLine(String line) {
 		if (line.contains("Fehler") || line.contains("Error")) {
 			System.out.println("Error in line content:\n" + line);

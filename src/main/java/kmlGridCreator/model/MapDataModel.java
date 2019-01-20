@@ -26,7 +26,7 @@ public class MapDataModel {
 		kml.createPolyStylesInDocument();
 		view.printToViewConsole("Die Generierung des kml Files wurde gestartet.");
 
-		map = new MyMap(TxtUtil.getPointsFromTxt(fileToReadFrom), view.getSelectedGridSizeInMeter(), view);
+		map = new MyMap(TxtUtil.getPointsFromTxt2(fileToReadFrom), view.getSelectedGridSizeInMeter(), view);
 		view.printToViewConsole("--- PUNKTE WERDEN ZUGEORDNET");
 		map.addPointsToTheAreas();
 		view.printToViewConsole(

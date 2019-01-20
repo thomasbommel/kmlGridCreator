@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import converter.MyPointForConverter;
 import main.java.kmlGridCreator.model.MyPoint;
 import main.java.kmlGridCreator.utils.TxtUtil;
 
@@ -16,9 +17,9 @@ public class TestUtil {
 	public static final String TEST_FOLDER_DIRECTORY = Paths.get(".").toAbsolutePath().normalize().toString() + "/testdata/";
 	public static final String TEST_FILE = TEST_FOLDER_DIRECTORY + "TestFile.txt";
 
-	public static List<MyPoint> getTestPoints() throws IOException {
-		return TxtUtil.getPointsFromTxt(new File(TEST_FILE));
-	}
+//	public static List<MyPointForConverter> getTestPoints() throws IOException {
+//		return TxtUtil.getPointsFromTxt(new File(TEST_FILE));
+//	}
 
 	public static List<String> extractPointFromKml(String kmlText) {
 		final Pattern pattern = Pattern.compile("<Point>((.|\n)*?)<\\/Point>");

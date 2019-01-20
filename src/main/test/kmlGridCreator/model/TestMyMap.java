@@ -24,13 +24,13 @@ public class TestMyMap {
 	
 	@Test
 	public void testGetPointCountToBoundingAreaCountMap() throws IOException, OverlappingPolyStylesException {
-		List<MyPoint> testPoints = TestUtil.getTestPoints();
+		//List<MyPoint> testPoints = TestUtil.getTestPoints();
 		//MyMap map = new MyMap(testPoints, 1000,new TestView(new MapDataModel(new MyKmlFactory("test"))));
 		//map.addPointsToTheAreas();
 
-		MyKmlFactory kml = new MyKmlFactory("tfds");
-		kml.addPointsToKmlWithIcon(testPoints);
-		kml.saveKmlFile(new File(TEST_FILE));
+	//	MyKmlFactory kml = new MyKmlFactory("tfds");
+	//	kml.addPointsToKmlWithIcon(testPoints);
+	//	kml.saveKmlFile(new File(TEST_FILE));
 		
 	//	Map<Integer,Integer> pcToBaCount = map.getPointCountToBoundingAreaCountMap();
 //		Assert.assertEquals(pcToBaCount.get(0),new Integer(1259));
